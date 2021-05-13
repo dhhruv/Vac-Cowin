@@ -19,13 +19,13 @@
     </a>
 </p>
 
-### About
+## About:
 
-[CoWIN Portal](https://www.cowin.gov.in/home) is used to self-register yourself for the Vaccination process in India. Here you can register yourself with your Phone Number and avail a slot from the available slots in various Vaccination Centres around the country.
+**[CoWIN Portal](https://www.cowin.gov.in/home)** is used to self-register yourself for the **Vaccination** process in India. Here you can register yourself with your Phone Number and avail a slot from the available slots in various Vaccination Centres around the country.
 
-### Introduction
+## Introduction:
 
-VacCowin is a Python Script to find open slots for Vaccination in India based on your pincode (or multiple pincodes) or State and District. This script will recheck after every few minutes and as soon the slots open, inform you via Beeping sound & Desktop notification.
+**VacCowin** is a Python Script to find open slots for Vaccination in India based on your **pincode (or multiple pincodes) or State and District**. This script will recheck after every few minutes and as soon the slots open, inform you via Beeping sound & Desktop notification.
 
 Since India has started the Vaccination Drive for those above 18 years of age, there is a very heavy rush and slots get booked soon. This script will come in handy for finding those slots as soon as they open.
 
@@ -35,20 +35,20 @@ The data is retrieved using the open public APIs at [API Setu](https://apisetu.g
 
 1. Install Python
 2. Clone this repository...
-```
+```sh
 git clone https://github.com/dhhruv/Vac-Cowin.git
 ```
 
 3. Install, create and activate virtual environment.
 For instance we create a virtual environment named 'venv'.
-```
+```sh
 pip install virtualenv
 python -m virtualenv venv
 venv\Scripts\activate.bat
 ```
 
 4. Install dependencies
-```
+```sh
 pip install -r requirements.txt
 ```
 ## Input:
