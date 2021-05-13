@@ -70,12 +70,12 @@ pip install -r requirements.txt
 **1.  Using Pincode(s):**
 -   You can check the available slots by entering Pincode(s) using `-p` specified with age using `-a`.
 Example: `python VacCowin.py -p 382150 -a 47`
-[Method 1](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/Method1.gif)
+![Method 1](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/Method1.gif)
 
 **2.  Using State and District:**
 -   You can check the available slots by entering State using `-s` and District using`-t` specified with age using `-a`.
 Example: `python VacCowin.py -s Gujarat -t Ahmedabad -a 19`
-[Method 2](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/Method2.gif)
+![Method 2](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/Method2.gif)
 
 **3.  Using Wizard Mode(For Beginners):**
 -    If you're a beginner then you can specify `-w` in the Terminal or directly run the Script to enter the Wizard Mode for Beginners.
@@ -86,7 +86,7 @@ Examples:
 
 -   Enter the Information asked to check the Available Slots.
 
-[Method 3](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/Method3.gif)
+![Method 3](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/Method3.gif)
 
 **Note:- Either Proceed through Pincode Method OR (State and District) Method for a reliable response.** 
 
