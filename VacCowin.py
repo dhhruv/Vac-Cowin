@@ -25,7 +25,7 @@ print(r"""
 
 
 
-                                    - Dhruv Panchal
+     								- Dhruv Panchal
 
 """)
 
@@ -57,13 +57,13 @@ def parse():
     help='Age of the User(Default = 18).')
 
     parser.add_argument('-d', '--date', metavar='Date', type=str, required=False, default=date.today().strftime('%d-%m-%Y'),
-    help='Date to check Vaccination(Format = DD-MM-YYYY).')
+    help='Date to check Vaccination Slot(Format = DD-MM-YYYY).')
 
     parser.add_argument('-w', '--wizard', metavar='Wizard', type=bool, nargs='?', required=False, const=True, default=False,
     help='For a User Friendly Interface.')
 
     parser.add_argument('-i', '--interval', metavar='Interval', type=int, required=False, default=300,
-    help='Interval in seconds after which to recheck the slots(Default = 300).')
+    help='Interval in which to read Data from CoWin Website in Seconds (Default = 300)')
 
     parser.add_argument('-s', '--state', metavar='State', type=str, required=False,
     help='The State you want to search for.')
@@ -231,7 +231,7 @@ class vaccinator:
   
 def desktop_notification(data):
     notification.notify(
-        app_name = "VacCowin",
+    	app_name = "VacCowin",
         title = 'VacCowin Found Slots!',
         message = data,
         timeout = 12
