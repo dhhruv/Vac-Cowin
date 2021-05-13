@@ -9,7 +9,6 @@ import re
 import sys
 import ssl
 
-
 print(r"""
 
 
@@ -26,12 +25,12 @@ print(r"""
 
 
 
-     								- Dhruv Panchal
+                                    - Dhruv Panchal
+
 """)
 
 
 DEBUG = False
-
 
 def debug(data, name):
     if DEBUG:
@@ -47,7 +46,7 @@ def error(err, err_type='normal'):
         print(f"Error: {err}")
 
 
-def parse(): # Parsing Function
+def parse():
 
     parser = argparse.ArgumentParser(prog='VacCowin')
 
@@ -73,38 +72,64 @@ def parse(): # Parsing Function
     help='The District you want to search for.')
 
     args = vars(parser.parse_args())
+
+    try:
+        datetime.strptime(args['date'], '%d-%m-%Y')
+    except Exception as e:
+        error("Incorrect data format, should be DD-MM-YYYY OR Check the Input Date is Valid or not...")
+        sys.exit()
+
+    if not args['state'] and args['district']:
+        error(
+            'State not mentioned in Query. Please Try Again...')
+        sys.exit()
+
     if not args['state'] and not args['pincode'] and not args['wizard']:
         error(
-            'Neither --pincode, nor --state with --district entered. So calling wizard...')
+            'Neither --pincode, nor --state with --district entered. So calling Wizard UI...')
         args['wizard'] = True
     elif not re.search(r"\d{2}\-\d{2}\-\d{4}", args['date']):
         error(f"Date {args['date']} is not in DD-MM-YYYY format", 'critical')
     return args
 
 
-def wizard(): # Wizard Function for Beginners.
+def wizard():
 
     output = {'pincode': [], 'age': 18, 'date': date.today().strftime(
-        '%d-%m-%Y'), 'state': '', 'district': '', 'interval': 300, }
-    print('You have entered the Wizard Mode.')
-    print('\nPlease Answer the following questions. \nIf you don\'t know any, you can skip by pressing Enter, the default value will be used.\n')
+        '%d-%m-%Y'), 'state': '', 'district': '', 'interval': 300, 'validInfo': True}
+    print('\nYou have entered the Wizard Mode.')
+    print('Please Answer the following questions. \nIf you don\'t know any, you can skip by pressing Enter, the default value will be used.\n')
 
     output['pincode'] = str(input(
-        'Enter Single (OR Multiple) Pincodes(s) separated by space i.e. 1234 1235 1236 \n(Skip if you wish to search by State and District):')).split(' ') or output['pincode']
+        'Enter Single (OR Multiple) Pincodes(s) separated by space i.e. 380001 380002 (Skip if you wish to search by State and District):')).split(' ') or output['pincode']
     output['state'] = str(
-        input("Enter State (Skip if you're using Pincode):")) or output['state']
+        input("Enter the State (Skip if you're using Pincode):")) or output['state']
     output['district'] = str(
-        input("Enter District (Skip if you're using Pincode):")) or output['district']
+        input("Enter the District (Skip if you're using Pincode):")) or output['district']
     output['age'] = str(
-        input('Enter Your Age i.e. 23 (Default = 18):')) or output['age']
+        input('Enter Your Age i.e. 21 (Default = 18):')) or output['age']
     output['date'] = str(input(
         f"Enter Date in DD-MM-YYYY format i.e. 01-02-2021. \nIt is advised to use default date so press Enter(Default = {output['date']}):")) or output['date']
-
     output['interval'] = str(input(
-        'Enter Interval in which to scan CoWin Website in Seconds (Default = 300):')) or output['interval']
+        'Enter Interval in which to read Data from CoWin Website in Seconds (Default = 300):')) or output['interval']
+
+    print()
+
+    if(output['pincode'][0]=='' and (output['state']=='' and output['district']=='')):
+        output['validInfo']=False
+        error(
+            'Neither Pincode, nor State with District entered. Exiting VacCowin. Please Try with Valid Inputs...')
+        sys.exit()
+
+    try:
+        datetime.strptime(output['date'], '%d-%m-%Y')
+    except Exception as e:
+        error("Incorrect data format, should be DD-MM-YYYY OR Check the Input Date is Valid or not...")
+        sys.exit()
 
     if not re.search(r"\d{2}\-\d{2}\-\d{4}", output['date']):
         error(f"Date {output['date']} is not in DD-MM-YYYY format", 'critical')
+
     return output
 
 
@@ -171,16 +196,16 @@ class vaccinator:
         try:
             res = r.get(statewise_url, headers=hdrs)
         except Exception as e:
-            error(f"Error while fetching statewise data\n{e}")
+            error(f"Error while fetching State-wise Data\n{e}")
             return ''
 
         if res.status_code != 200:
-            error('Response code not ok')
+            error('Response Code Not OK!!')
             return ''
         try:
             debug(json.dumps(res.json(), indent = 1), 'search_by_state')
         except Exception as e:
-            error('JSON decode error')
+            error('JSON Decode Error')
         else:
             return self.detect(res.json())
         return ''
@@ -199,16 +224,14 @@ class vaccinator:
             try:
                 debug(json.dumps(res.json(), indent = 1), 'search_by_pin')
             except Exception as e:
-                error('JSON decoder error')
+                error('JSON Decoder Error')
             else:
                 return self.detect(res.json())
         return ''
-
-######## Class ends #############
-
-######## Alert functions ########    
+  
 def desktop_notification(data):
     notification.notify(
+        app_name = "VacCowin",
         title = 'VacCowin Found Slots!',
         message = data,
         timeout = 12
@@ -228,7 +251,7 @@ def repeater(args):
         data = run.search_by_pin()
 
     if data == {args['pincode']:[]} or not data:
-        print(f"No slots found for {location_type}")
+        print(f"No Slots available for {location_type}")
         return ''
     sequence = 1
     for i in data[args['pincode']]:
@@ -238,38 +261,37 @@ def repeater(args):
     return messages
 
 def main():
-    # Parsing and settting options
+
     all_args = wizard() if parse()['wizard'] else parse()
+
+    if('validInfo' in all_args and not all_args['validInfo']):
+        sys.exit(0)
     debug(all_args, 'main')
     
     counter = 1
     pins = all_args['pincode']
-    # Infinite loop
+
     while True:
         print(f"\n[Time: {datetime.now().strftime('%H:%M:%S')}]  Try: [{counter}]")
         found = ''
         if pins:
             for pin in pins :
-                all_args['pincode'] = pin # To send single pin instead of list
+                all_args['pincode'] = pin 
                 found += repeater(all_args)
         else:
             found += repeater(all_args)
 
-        if found: # Script will keep beeping while waiting if slots are found
-            ############ All alerts #################
+        if found:
             print(found)
-            # telegram_bot_sendtext(all_args, found)
-            # if all_args['email']:
-            #     send_email(all_args, found)
-            print('Info: Slots have been found. Exit the program to stop the beeping sound')
-            desktop_notification(f"Slots available at in District: {all_args['district'].capitalize()} of State: {all_args['state'].capitalize()}. \nCheck your Terminal for Detailed Information.")
+            print('\nInfo: Slots have been found. Exit the Terminal to stop the Beeping Sound')
+            desktop_notification(f"Slots are available for your mentioned Query. \nCheck your Terminal for Detailed Information.")
             for _ in range(1,int(all_args['interval'])):
                 sys.stdout.write('\a')
                 sys.stdout.flush()
                 time.sleep(1)
-            ############ All alerts end ################
+
         else:
-            print(f"Info: Going to sleep for {int(all_args['interval'])/60} minutes till next try.")
+            print(f"Info: Script will be Sleeping for {int(all_args['interval'])/60} minutes until the Next Try. Please Wait...")
             time.sleep(int(all_args['interval']))
         counter += 1
         
@@ -277,5 +299,5 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print('\nUser Aborted\nExiting, please wait...')
+        print('\n\nUser Aborted the Program.\nExiting, Please Wait...')
         sys.exit()
