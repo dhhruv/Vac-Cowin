@@ -90,7 +90,7 @@ pip install -r requirements.txt
 -   Enter the Information asked to check the Available Slots.
 ![Method 3](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/Method3.gif)
 
-**Note:- Either Proceed through Pincode Method OR (State and District) Method for a reliable response.** 
+<p align='center'><b>Note:- Either Proceed through Pincode Method OR (State and District) Method for a reliable response.</b></p> 
 
 <p align='center'><b>Made with ❤ by Dhruv Panchal</b></p>
 
