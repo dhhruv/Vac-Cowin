@@ -85,7 +85,6 @@ Examples:
 `python VacCowin.py`
 
 -   Enter the Information asked to check the Available Slots.
-
 ![Method 3](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/Method3.gif)
 
 **Note:- Either Proceed through Pincode Method OR (State and District) Method for a reliable response.** 
