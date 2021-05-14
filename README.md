@@ -37,7 +37,9 @@ The data is retrieved using the open public APIs at [API Setu](https://apisetu.g
 2. Clone this repository...
 ```sh
 git clone https://github.com/dhhruv/Vac-Cowin.git
-```
+``` 
+**OR** 
+Download the Zip and Extract the content.
 
 3. Install, create and activate virtual environment.
 For instance we create a virtual environment named 'venv'.
@@ -49,6 +51,7 @@ venv\Scripts\activate.bat
 
 4. Install dependencies
 ```sh
+cd Vac-Cowin
 pip install -r requirements.txt
 ```
 ## Input:
