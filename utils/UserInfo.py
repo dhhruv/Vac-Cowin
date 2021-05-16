@@ -4,9 +4,9 @@ import os
 import sys
 from collections import Counter
 
-from utils.displayData import display_info_dict
-from utils.getData import get_beneficiaries, get_districts, get_pincodes
-from utils.preferences import get_fee_type_preference, get_vaccine_preference
+from utils.displayData import displayInfoDict
+from utils.getData import getBeneficiaries, getDistricts, getPincodes
+from utils.preferences import getFeeTypePreference, getVaccinePreference
 
 BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
 BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
@@ -44,11 +44,11 @@ else:
         winsound.Beep(freq, duration)
 
 
-def confirm_and_proceed(collected_details):
+def confirmAndProceed(collected_details):
     print(
         "\n================================= Confirm Info =================================\n"
     )
-    display_info_dict(collected_details)
+    displayInfoDict(collected_details)
 
     confirm = input("\nProceed with above info (y/n Default y) : ")
     confirm = confirm if confirm else "y"
@@ -58,7 +58,7 @@ def confirm_and_proceed(collected_details):
         sys.exit()
 
 
-def save_user_info(filename, details):
+def saveUserInfo(filename, details):
     print(
         "\n================================= Save Info =================================\n"
     )
@@ -73,17 +73,17 @@ def save_user_info(filename, details):
         print(f"Info saved to {filename} in {os.getcwd()}")
 
 
-def get_saved_user_info(filename):
+def getSavedUserInfo(filename):
     with open(filename, "r") as f:
         data = json.load(f)
 
     return data
 
 
-def collect_user_details(request_header):
+def collectUserDetails(request_header):
     # Get Beneficiaries
     print("Fetching registered beneficiaries.. ")
-    beneficiary_dtls = get_beneficiaries(request_header)
+    beneficiary_dtls = getBeneficiaries(request_header)
 
     if len(beneficiary_dtls) == 0:
         print("There should be at least one beneficiary. Exiting.")
@@ -107,7 +107,7 @@ def collect_user_details(request_header):
         print(
             "\n================================= Vaccine Info =================================\n"
         )
-        vaccine_type = get_vaccine_preference()
+        vaccine_type = getVaccinePreference()
 
     print(
         "\n================================= Location Info =================================\n"
@@ -124,11 +124,11 @@ def collect_user_details(request_header):
 
     if search_option == 2:
         # Collect vaccination center preferance
-        location_dtls = get_districts(request_header)
+        location_dtls = getDistricts(request_header)
 
     else:
         # Collect vaccination center preferance
-        location_dtls = get_pincodes()
+        location_dtls = getPincodes()
 
     print(
         "\n================================= Additional Info =================================\n"
@@ -168,7 +168,7 @@ def collect_user_details(request_header):
             start_date = 2
 
     # Get preference of Free/Paid option
-    fee_type = get_fee_type_preference()
+    fee_type = getFeeTypePreference()
 
     print(
         "\n=========== CAUTION! =========== CAUTION! CAUTION! =============== CAUTION! =======\n"

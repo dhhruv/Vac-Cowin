@@ -1,7 +1,7 @@
 import tabulate
 
 
-def viable_options(resp, minimum_slots, min_age_booking, fee_type):
+def viableOptions(resp, minimum_slots, min_age_booking, fee_type):
     options = []
     if len(resp["centers"]) >= 0:
         for center in resp["centers"]:
@@ -31,7 +31,7 @@ def viable_options(resp, minimum_slots, min_age_booking, fee_type):
     return options
 
 
-def display_table(dict_list):
+def displayTable(dict_list):
     """
     This function
         1. Takes a list of dictionary
@@ -43,12 +43,12 @@ def display_table(dict_list):
     print(tabulate.tabulate(rows, header, tablefmt="grid"))
 
 
-def display_info_dict(details):
+def displayInfoDict(details):
     for key, value in details.items():
         if isinstance(value, list):
             if all(isinstance(item, dict) for item in value):
                 print(f"\t{key}:")
-                display_table(value)
+                displayTable(value)
             else:
                 print(f"\t{key}\t: {value}")
         else:

@@ -37,7 +37,7 @@ else:
         winsound.Beep(freq, duration)
 
 
-def get_vaccine_preference():
+def getVaccinePreference():
     print(
         "It seems you're trying to find a slot for your first dose. Do you have a vaccine preference?"
     )
@@ -54,7 +54,7 @@ def get_vaccine_preference():
         return None
 
 
-def get_fee_type_preference():
+def getFeeTypePreference():
     print("\nDo you have a fee type preference?")
     preference = input(
         "Enter 0 for No Preference, 1 for Free Only, or 2 for Paid Only. Default 0 : "

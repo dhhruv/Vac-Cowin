@@ -4,7 +4,7 @@ import sys
 
 import requests
 
-from utils.displayData import display_table
+from utils.displayData import displayTable
 
 BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
 BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
@@ -42,7 +42,7 @@ else:
         winsound.Beep(freq, duration)
 
 
-def get_pincodes():
+def getPincodes():
     locations = []
     pincodes = input("Enter comma separated index numbers of pincodes to monitor: ")
     for idx, pincode in enumerate(pincodes.split(",")):
@@ -51,7 +51,7 @@ def get_pincodes():
     return locations
 
 
-def get_districts(request_header):
+def getDistricts(request_header):
     """
     This function
         1. Lists all states, prompts to select one,
@@ -70,7 +70,7 @@ def get_districts(request_header):
             tmp = {"state": state["state_name"]}
             refined_states.append(tmp)
 
-        display_table(refined_states)
+        displayTable(refined_states)
         state = int(input("\nEnter State index: "))
         state_id = states[state - 1]["state_id"]
 
@@ -87,7 +87,7 @@ def get_districts(request_header):
                 tmp = {"district": district["district_name"]}
                 refined_districts.append(tmp)
 
-            display_table(refined_districts)
+            displayTable(refined_districts)
             reqd_districts = input(
                 "\nEnter comma separated index numbers of districts to monitor : "
             )
@@ -103,7 +103,7 @@ def get_districts(request_header):
             ]
 
             print(f"Selected districts: ")
-            display_table(reqd_districts)
+            displayTable(reqd_districts)
             return reqd_districts
 
         else:
@@ -121,7 +121,7 @@ def get_districts(request_header):
         sys.exit(1)
 
 
-def get_beneficiaries(request_header):
+def getBeneficiaries(request_header):
     """
     This function
         1. Fetches all beneficiaries registered under the mobile number,
@@ -148,7 +148,7 @@ def get_beneficiaries(request_header):
             }
             refined_beneficiaries.append(tmp)
 
-        display_table(refined_beneficiaries)
+        displayTable(refined_beneficiaries)
         print(
             """
         ################# IMPORTANT NOTES #################
@@ -180,7 +180,7 @@ def get_beneficiaries(request_header):
         ]
 
         print(f"Selected beneficiaries: ")
-        display_table(reqd_beneficiaries)
+        displayTable(reqd_beneficiaries)
         return reqd_beneficiaries
 
     else:
@@ -191,7 +191,7 @@ def get_beneficiaries(request_header):
         return []
 
 
-def get_min_age(beneficiary_dtls):
+def getMinAge(beneficiary_dtls):
     """
     This function returns a min age argument, based on age of all beneficiaries
     :param beneficiary_dtls:

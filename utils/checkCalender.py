@@ -4,7 +4,7 @@ import sys
 
 import requests
 
-from utils.displayData import viable_options
+from utils.displayData import viableOptions
 
 BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
 BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
@@ -42,7 +42,7 @@ else:
         winsound.Beep(freq, duration)
 
 
-def check_calendar_by_district(
+def checkCalenderByDistrict(
     request_header,
     vaccine_type,
     location_dtls,
@@ -85,7 +85,7 @@ def check_calendar_by_district(
                     print(
                         f"Centers available in {location['district_name']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
-                    options += viable_options(
+                    options += viableOptions(
                         resp, minimum_slots, min_age_booking, fee_type
                     )
 
@@ -103,7 +103,7 @@ def check_calendar_by_district(
         beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
 
 
-def check_calendar_by_pincode(
+def checkCalenderByPincode(
     request_header,
     vaccine_type,
     location_dtls,
@@ -145,7 +145,7 @@ def check_calendar_by_pincode(
                     print(
                         f"Centers available in {location['pincode']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
-                    options += viable_options(
+                    options += viableOptions(
                         resp, minimum_slots, min_age_booking, fee_type
                     )
 

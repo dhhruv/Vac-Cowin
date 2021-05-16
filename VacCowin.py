@@ -9,14 +9,14 @@ from types import SimpleNamespace
 
 import requests
 
-from utils.appointment import check_and_book
-from utils.displayData import display_info_dict
-from utils.generateOTP import generate_token_OTP
+from utils.appointment import checkAndBook
+from utils.displayData import displayInfoDict
+from utils.generateOTP import generateTokenOTP
 from utils.userInfo import (
-    collect_user_details,
-    confirm_and_proceed,
-    get_saved_user_info,
-    save_user_info,
+    collectUserDetails,
+    confirmAndProceed,
+    getSavedUserInfo,
+    saveUserInfo,
 )
 
 BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
@@ -71,7 +71,7 @@ def main():
             token = args.token
         else:
             mobile = input("Enter the registered mobile number: ")
-            token = generate_token_OTP(mobile, base_request_header)
+            token = generateTokenOTP(mobile, base_request_header)
 
         request_header = copy.deepcopy(base_request_header)
         request_header["Authorization"] = f"Bearer {token}"
@@ -92,27 +92,27 @@ def main():
             try_file = try_file if try_file else "y"
 
             if try_file == "y":
-                collected_details = get_saved_user_info(filename)
+                collected_details = getSavedUserInfo(filename)
                 print(
                     "\n================================= Info =================================\n"
                 )
-                display_info_dict(collected_details)
+                displayInfoDict(collected_details)
 
                 file_acceptable = input("\nProceed with above info? (y/n Default n): ")
                 file_acceptable = file_acceptable if file_acceptable else "n"
 
                 if file_acceptable != "y":
-                    collected_details = collect_user_details(request_header)
-                    save_user_info(filename, collected_details)
+                    collected_details = collectUserDetails(request_header)
+                    saveUserInfo(filename, collected_details)
 
             else:
-                collected_details = collect_user_details(request_header)
-                save_user_info(filename, collected_details)
+                collected_details = collectUserDetails(request_header)
+                saveUserInfo(filename, collected_details)
 
         else:
-            collected_details = collect_user_details(request_header)
-            save_user_info(filename, collected_details)
-            confirm_and_proceed(collected_details)
+            collected_details = collectUserDetails(request_header)
+            saveUserInfo(filename, collected_details)
+            confirmAndProceed(collected_details)
 
         info = SimpleNamespace(**collected_details)
 
@@ -122,7 +122,7 @@ def main():
             request_header["Authorization"] = f"Bearer {token}"
 
             # call function to check and book slots
-            token_valid = check_and_book(
+            token_valid = checkAndBook(
                 request_header,
                 info.beneficiary_dtls,
                 info.location_dtls,
@@ -150,7 +150,7 @@ def main():
                 if tryOTP.lower() == "y" or not tryOTP:
                     if not mobile:
                         mobile = input("Enter the registered mobile number: ")
-                    token = generate_token_OTP(mobile, base_request_header)
+                    token = generateTokenOTP(mobile, base_request_header)
                     token_valid = True
                 else:
                     print("Exiting")

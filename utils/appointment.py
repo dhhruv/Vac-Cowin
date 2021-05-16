@@ -9,9 +9,9 @@ import requests
 from inputimeout import TimeoutOccurred, inputimeout
 
 from utils.captcha import captchaBuilder
-from utils.checkCalender import check_calendar_by_district, check_calendar_by_pincode
-from utils.displayData import display_table
-from utils.getData import get_min_age
+from utils.checkCalender import checkCalenderByDistrict, checkCalenderByPincode
+from utils.displayData import displayTable
+from utils.getData import getMinAge
 
 BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
 BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
@@ -49,7 +49,7 @@ else:
         winsound.Beep(freq, duration)
 
 
-def generate_captcha(request_header):
+def generateCaptcha(request_header):
     print(
         "================================= GETTING CAPTCHA =================================================="
     )
@@ -62,7 +62,7 @@ def generate_captcha(request_header):
         return captcha
 
 
-def book_appointment(request_header, details):
+def bookAppointment(request_header, details):
     """
     This function
         1. Takes details in json format
@@ -72,7 +72,7 @@ def book_appointment(request_header, details):
     try:
         valid_captcha = True
         while valid_captcha:
-            captcha = generate_captcha(request_header)
+            captcha = generateCaptcha(request_header)
             details["captcha"] = captcha
 
             print(
@@ -114,7 +114,7 @@ def book_appointment(request_header, details):
         beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
 
 
-def check_and_book(
+def checkAndBook(
     request_header, beneficiary_dtls, location_dtls, search_option, **kwargs
 ):
     """
@@ -126,7 +126,7 @@ def check_and_book(
         5. Returns True or False depending on Token Validity
     """
     try:
-        min_age_booking = get_min_age(beneficiary_dtls)
+        min_age_booking = getMinAge(beneficiary_dtls)
 
         minimum_slots = kwargs["min_slots"]
         refresh_freq = kwargs["ref_freq"]
@@ -145,7 +145,7 @@ def check_and_book(
             pass
 
         if search_option == 2:
-            options = check_calendar_by_district(
+            options = checkCalenderByDistrict(
                 request_header,
                 vaccine_type,
                 location_dtls,
@@ -155,7 +155,7 @@ def check_and_book(
                 fee_type,
             )
         else:
-            options = check_calendar_by_pincode(
+            options = checkCalenderByPincode(
                 request_header,
                 vaccine_type,
                 location_dtls,
@@ -186,7 +186,7 @@ def check_and_book(
                 item.pop("center_id", None)
                 cleaned_options_for_display.append(item)
 
-            display_table(cleaned_options_for_display)
+            displayTable(cleaned_options_for_display)
             if auto_book == "yes-please":
                 print(
                     "AUTO-BOOKING IS ENABLED. PROCEEDING WITH FIRST CENTRE, DATE, and RANDOM SLOT."
@@ -237,7 +237,7 @@ def check_and_book(
                 }
 
                 print(f"Booking with info: {new_req}")
-                return book_appointment(request_header, new_req)
+                return bookAppointment(request_header, new_req)
 
             except IndexError:
                 print("============> Invalid Option!")

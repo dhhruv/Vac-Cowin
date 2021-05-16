@@ -41,7 +41,7 @@ else:
         winsound.Beep(freq, duration)
 
 
-def generate_token_OTP(mobile, request_header):
+def generateTokenOTP(mobile, request_header):
     """
     This function generate OTP and returns a new token
     """
