@@ -12,7 +12,7 @@ import requests
 from utils.appointment import checkAndBook
 from utils.displayData import displayInfoDict
 from utils.generateOTP import generateTokenOTP
-from utils.userInfo import (
+from utils.UserInfo import (
     collectUserDetails,
     confirmAndProceed,
     getSavedUserInfo,
@@ -40,7 +40,8 @@ except ImportError:
 
         def beep(freq, duration):
             # brew install SoX --> install SOund eXchange universal sound sample translator on mac
-            os.system(f"play -n synth {duration/1000} sin {freq} >/dev/null 2>&1")
+            os.system(
+                f"play -n synth {duration/1000} sin {freq} >/dev/null 2>&1")
 
     else:
 
@@ -98,7 +99,8 @@ def main():
                 )
                 displayInfoDict(collected_details)
 
-                file_acceptable = input("\nProceed with above info? (y/n Default n): ")
+                file_acceptable = input(
+                    "\nProceed with above info? (y/n Default n): ")
                 file_acceptable = file_acceptable if file_acceptable else "n"
 
                 if file_acceptable != "y":
@@ -136,7 +138,8 @@ def main():
             )
 
             # check if token is still valid
-            beneficiaries_list = requests.get(BENEFICIARIES_URL, headers=request_header)
+            beneficiaries_list = requests.get(
+                BENEFICIARIES_URL, headers=request_header)
             if beneficiaries_list.status_code == 200:
                 token_valid = True
 
@@ -163,4 +166,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('\n\nUser Aborted the Program.\nExiting, Please Wait...')
+        sys.exit()
