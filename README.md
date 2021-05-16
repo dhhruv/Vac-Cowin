@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://github.com/dhhruv/Vac-Cowin/blob/master/assets/poster.png">
-  <h2 align="center" style="margin-top: -4px !important;">Check Available Slots for CoWIN Vaccination right from your Terminal!</h2>
+  <h2 align="center" style="margin-top: -4px !important;">Booking Available Vaccination Slots from CoWIN Website right from your Terminal...</h2>
   <p align="center">
     <a href="https://github.com/dhhruv/Vac-Cowin/blob/master/LICENSE">
       <img src="https://img.shields.io/badge/license-MIT-informational">
