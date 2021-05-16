@@ -55,9 +55,9 @@ pip install -r requirements.txt
 ```
 
 ### Team Members:
-1.  Dhruv Panchal
-2.  Urveshkumar Patel
-3.  Nirja Desai
+1.  [Dhruv Panchal](https://github.com/dhhruv)
+2.  [Urveshkumar Patel](https://github.com/urvesh254)
+3.  [Nirja Desai](https://github.com/nirami98)
 
 ### Important: 
 - This is a Proof of Concept Project. **I OR the Team** do NOT endorse or condone, in any shape or form, automating any monitoring/booking tasks. **Use this at your own risk.**
