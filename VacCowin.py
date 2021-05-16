@@ -1,303 +1,170 @@
-from plyer import notification
-import requests as r
-from datetime import datetime
-from datetime import date
+#!/usr/bin/env python3
+
 import argparse
-import json
-import time
-import re
+import copy
+import datetime
+import os
 import sys
-import ssl
+from types import SimpleNamespace
 
-print(r"""
+import requests
+
+from appointment import book_appointment, check_and_book, generate_captcha
+from captcha import captchaBuilder
+from checkCalender import check_calendar_by_district, check_calendar_by_pincode
+from displayData import display_info_dict, display_table
+from generateOTP import generate_token_OTP
+from getData import get_beneficiaries, get_districts, get_min_age, get_pincodes
+from preferences import get_fee_type_preference, get_vaccine_preference
+from UserInfo import (
+    collect_user_details,
+    confirm_and_proceed,
+    get_saved_user_info,
+    save_user_info,
+)
+
+BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
+BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
+CALENDAR_URL_DISTRICT = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={0}&date={1}"
+CALENDAR_URL_PINCODE = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByPin?pincode={0}&date={1}"
+CAPTCHA_URL = "https://cdn-api.co-vin.in/api/v2/auth/getRecaptcha"
+OTP_PUBLIC_URL = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"
+OTP_PRO_URL = "https://cdn-api.co-vin.in/api/v2/auth/generateMobileOTP"
+
+WARNING_BEEP_DURATION = (1000, 2000)
 
 
+try:
+    import winsound
 
- __     __                      ______                           __
-|  \   |  \                    /      \                         |  \
-| $$   | $$ ______    _______ |  $$$$$$\  ______   __   __   __  \$$ _______
-| $$   | $$|      \  /       \| $$   \$$ /      \ |  \ |  \ |  \|  \|       \
- \$$\ /  $$ \$$$$$$\|  $$$$$$$| $$      |  $$$$$$\| $$ | $$ | $$| $$| $$$$$$$\
-  \$$\  $$ /      $$| $$      | $$   __ | $$  | $$| $$ | $$ | $$| $$| $$  | $$
-   \$$ $$ |  $$$$$$$| $$_____ | $$__/  \| $$__/ $$| $$_/ $$_/ $$| $$| $$  | $$
-    \$$$   \$$    $$ \$$     \ \$$    $$ \$$    $$ \$$   $$   $$| $$| $$  | $$
-     \$     \$$$$$$$  \$$$$$$$  \$$$$$$   \$$$$$$   \$$$$$\$$$$  \$$ \$$   \$$
+except ImportError:
+    import os
 
+    if sys.platform == "darwin":
 
+        def beep(freq, duration):
+            # brew install SoX --> install SOund eXchange universal sound sample translator on mac
+            os.system(f"play -n synth {duration/1000} sin {freq} >/dev/null 2>&1")
 
-     								- Dhruv Panchal
-
-""")
-
-
-DEBUG = False
-
-def debug(data, name):
-    if DEBUG:
-        print(f"Data: {data}\nFunction name: {name}\n\n")
-
-
-def error(err, err_type='normal'):
-    if err_type == 'critical':
-        print(f"Error: {err}")
-        input('Press Any Key to EXIT...')
-        sys.exit()
     else:
-        print(f"Error: {err}")
+
+        def beep(freq, duration):
+            # apt-get install beep  --> install beep package on linux distros before running
+            os.system("beep -f %s -l %s" % (freq, duration))
 
 
-def parse():
+else:
 
-    parser = argparse.ArgumentParser(prog='VacCowin')
+    def beep(freq, duration):
+        winsound.Beep(freq, duration)
 
-    parser.add_argument('-p', '--pincode', metavar='Pincode1 Pincode2', type=int, nargs='*', required=False,
-    help='Pincode(s) to look for slots.')
-
-    parser.add_argument('-a', '--age', metavar='Age', type=int, required=False, default=18,
-    help='Age of the User(Default = 18).')
-
-    parser.add_argument('-d', '--date', metavar='Date', type=str, required=False, default=date.today().strftime('%d-%m-%Y'),
-    help='Date to check Vaccination Slot(Format = DD-MM-YYYY).')
-
-    parser.add_argument('-w', '--wizard', metavar='Wizard', type=bool, nargs='?', required=False, const=True, default=False,
-    help='For a User Friendly Interface.')
-
-    parser.add_argument('-i', '--interval', metavar='Interval', type=int, required=False, default=300,
-    help='Interval in which to read Data from CoWin Website in Seconds (Default = 300)')
-
-    parser.add_argument('-s', '--state', metavar='State', type=str, required=False,
-    help='The State you want to search for.')
-
-    parser.add_argument('-t', '--district', metavar='District', type=str, required=False,
-    help='The District you want to search for.')
-
-    args = vars(parser.parse_args())
-
-    try:
-        datetime.strptime(args['date'], '%d-%m-%Y')
-    except Exception as e:
-        error("Incorrect data format, should be DD-MM-YYYY OR Check the Input Date is Valid or not...")
-        sys.exit()
-
-    if not args['state'] and args['district']:
-        error(
-            'State not mentioned in Query. Please Try Again...')
-        sys.exit()
-
-    if not args['state'] and not args['pincode'] and not args['wizard']:
-        error(
-            'Neither --pincode, nor --state with --district entered. So calling Wizard UI...')
-        args['wizard'] = True
-    elif not re.search(r"\d{2}\-\d{2}\-\d{4}", args['date']):
-        error(f"Date {args['date']} is not in DD-MM-YYYY format", 'critical')
-    return args
-
-
-def wizard():
-
-    output = {'pincode': [], 'age': 18, 'date': date.today().strftime(
-        '%d-%m-%Y'), 'state': '', 'district': '', 'interval': 300, 'validInfo': True}
-    print('\nYou have entered the Wizard Mode.')
-    print('Please Answer the following questions. \nIf you don\'t know any, you can skip by pressing Enter, the default value will be used.\n')
-
-    output['pincode'] = str(input(
-        'Enter Single (OR Multiple) Pincodes(s) separated by space i.e. 380001 380002 (Skip if you wish to search by State and District):')).split(' ') or output['pincode']
-    output['state'] = str(
-        input("Enter the State (Skip if you're using Pincode):")) or output['state']
-    output['district'] = str(
-        input("Enter the District (Skip if you're using Pincode):")) or output['district']
-    output['age'] = str(
-        input('Enter Your Age i.e. 21 (Default = 18):')) or output['age']
-    output['date'] = str(input(
-        f"Enter Date in DD-MM-YYYY format i.e. 01-02-2021. \nIt is advised to use default date so press Enter(Default = {output['date']}):")) or output['date']
-    output['interval'] = str(input(
-        'Enter Interval in which to read Data from CoWin Website in Seconds (Default = 300):')) or output['interval']
-
-    print()
-
-    if(output['pincode'][0]=='' and (output['state']=='' and output['district']=='')):
-        output['validInfo']=False
-        error(
-            'Neither Pincode, nor State with District entered. Exiting VacCowin. Please Try with Valid Inputs...')
-        sys.exit()
-
-    try:
-        datetime.strptime(output['date'], '%d-%m-%Y')
-    except Exception as e:
-        error("Incorrect data format, should be DD-MM-YYYY OR Check the Input Date is Valid or not...")
-        sys.exit()
-
-    if not re.search(r"\d{2}\-\d{2}\-\d{4}", output['date']):
-        error(f"Date {output['date']} is not in DD-MM-YYYY format", 'critical')
-
-    return output
-
-
-class vaccinator:
-
-    def __init__(self, args):
-        self.pincode = args['pincode']
-        self.age = int(args['age'])
-        self.date = args['date']
-        self.state = args['state']
-        self.district = args['district']
-
-    def detect(self, data):
-        output = {self.pincode: []}
-        if 'error' in data.keys():
-            error(data['error'])
-            return output
-        if data == {'centers': []} or data == {'sessions': []}:
-            return output
-        for center in data['centers']:
-            for session in center['sessions']:
-                if session['min_age_limit'] <= self.age and session['available_capacity'] > 0:
-                    output[self.pincode].append([f"{center['name']}, {center['block_name']}, {center['district_name']}, {center['state_name']}, {center['pincode']}",
-                                                   session['date'], session['slots']])
-        debug(output, 'detect')
-        return output
-
-    def search_by_state(self):
-        hdrs = {
-            'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0"}
-        did = state_id = 0
-        res = district_data = ''
-        states = {'andaman and nicobar islands': 1, 'andhra pradesh': 2, 'arunachal pradesh': 3, 'assam': 4, 'bihar': 5, 'chandigarh': 6, 'chhattisgarh': 7, 'dadra and nagar haveli': 8, 'daman and diu': 37, 'delhi': 9, 'goa': 10, 'gujarat': 11, 'haryana': 12, 'himachal pradesh': 13, 'jammu and kashmir': 14, 'jharkhand': 15, 'karnataka': 16,
-            'kerala': 17, 'ladakh': 18, 'lakshadweep': 19, 'madhya pradesh': 20, 'maharashtra': 21, 'manipur': 22, 'meghalaya': 23, 'mizoram': 24, 'nagaland': 25, 'odisha': 26, 'puducherry': 27, 'punjab': 28, 'rajasthan': 29, 'sikkim': 30, 'tamil nadu': 31, 'telangana': 32, 'tripura': 33, 'uttar pradesh': 34, 'uttarakhand': 35, 'west bengal': 36}
-        try:
-            state_id = states[self.state.lower()]
-        except KeyError:
-            error('State not Found. Please enter any valid State...')
-            sys.exit()
-            return ''
-
-        fetch_districts_url = f"https://cdn-api.co-vin.in/api/v2/admin/location/districts/{state_id}"
-        try:
-            res = r.get(fetch_districts_url, headers=hdrs)
-        except Exception as e:
-            error(f"Error while fetching district list\n{e}")
-            return ''
-        district_data = res.json()
-
-        try:
-            for district in district_data['districts']:
-                if district['district_name'].lower() == self.district.lower():
-                    did = district['district_id']
-        except Exception as e:
-            error(f"District not mentioned in Query. Please Try Again...")
-            sys.exit()
-            return ''
-
-        if did == 0:
-            error('District not Found. Please enter any valid District...')
-            sys.exit()
-            return ''
-        statewise_url = f"https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id={did}&date={self.date}"
-        try:
-            res = r.get(statewise_url, headers=hdrs)
-        except Exception as e:
-            error(f"Error while fetching State-wise Data\n{e}")
-            return ''
-
-        if res.status_code != 200:
-            error('Response Code Not OK!!')
-            return ''
-        try:
-            debug(json.dumps(res.json(), indent = 1), 'search_by_state')
-        except Exception as e:
-            error('JSON Decode Error')
-        else:
-            return self.detect(res.json())
-        return ''
-
-    def search_by_pin(self):
-        hdrs={'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0"}
-        url = f"https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode={self.pincode}&date={self.date}"
-        try:
-            res = r.get(url, headers=hdrs)
-        except Exception as e:
-            error(e)
-        else:
-            if res.status_code != 200:
-                error('Response Code Not OK !!')
-                return ''
-            try:
-                debug(json.dumps(res.json(), indent = 1), 'search_by_pin')
-            except Exception as e:
-                error('JSON Decoder Error')
-            else:
-                return self.detect(res.json())
-        return ''
-  
-def desktop_notification(data):
-    notification.notify(
-    	app_name = "VacCowin",
-        title = 'VacCowin Found Slots!',
-        message = data,
-        timeout = 12
-        )
-
-
-def repeater(args):
-    location_type = ''
-    data = {}
-    messages = ''
-    run = vaccinator(args)
-    if args['state']:
-        location_type = f"State: {args['state']}, District: {args['district']}" 
-        data = run.search_by_state()
-    if args['pincode']:
-        location_type = f"Pincode: {args['pincode']}"
-        data = run.search_by_pin()
-
-    if data == {args['pincode']:[]} or not data:
-        print(f"No Slots available for {location_type}")
-        return ''
-    sequence = 1
-    for i in data[args['pincode']]:
-        messages += f"\n{sequence}. Date: {i[1]}\n   Location: {i[0]}\n   Slots: {i[2]}"
-        sequence += 1
-    messages = f"***Available at {location_type}***{messages}"
-    return messages
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--token", help="Pass token directly")
+    args = parser.parse_args()
 
-    all_args = wizard() if parse()['wizard'] else parse()
-
-    if('validInfo' in all_args and not all_args['validInfo']):
-        sys.exit(0)
-    debug(all_args, 'main')
-    
-    counter = 1
-    pins = all_args['pincode']
-
-    while True:
-        print(f"\n[Time: {datetime.now().strftime('%H:%M:%S')}]  Try: [{counter}]")
-        found = ''
-        if pins:
-            for pin in pins :
-                all_args['pincode'] = pin 
-                found += repeater(all_args)
-        else:
-            found += repeater(all_args)
-
-        if found:
-            print(found)
-            print('\nInfo: Slots have been found. Exit the Terminal to stop the Beeping Sound')
-            desktop_notification(f"Slots are available for your mentioned Query. \nCheck your Terminal for Detailed Information.")
-            for _ in range(1,int(all_args['interval'])):
-                sys.stdout.write('\a')
-                sys.stdout.flush()
-                time.sleep(1)
-
-        else:
-            print(f"Info: Script will be Sleeping for {int(all_args['interval'])/60} minutes until the Next Try. Please Wait...")
-            time.sleep(int(all_args['interval']))
-        counter += 1
-        
-if __name__ == "__main__":
+    filename = "vaccine-booking-details.json"
+    mobile = None
     try:
-        main()
-    except KeyboardInterrupt:
-        print('\n\nUser Aborted the Program.\nExiting, Please Wait...')
-        sys.exit()
+        base_request_header = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36",
+        }
+
+        if args.token:
+            token = args.token
+        else:
+            mobile = input("Enter the registered mobile number: ")
+            token = generate_token_OTP(mobile, base_request_header)
+
+        request_header = copy.deepcopy(base_request_header)
+        request_header["Authorization"] = f"Bearer {token}"
+
+        if os.path.exists(filename):
+            print(
+                "\n=================================== Note ===================================\n"
+            )
+            print(
+                f"Info from perhaps a previous run already exists in {filename} in this directory."
+            )
+            print(
+                f"IMPORTANT: If this is your first time running this version of the application, DO NOT USE THE FILE!"
+            )
+            try_file = input(
+                "Would you like to see the details and confirm to proceed? (y/n Default y): "
+            )
+            try_file = try_file if try_file else "y"
+
+            if try_file == "y":
+                collected_details = get_saved_user_info(filename)
+                print(
+                    "\n================================= Info =================================\n"
+                )
+                display_info_dict(collected_details)
+
+                file_acceptable = input("\nProceed with above info? (y/n Default n): ")
+                file_acceptable = file_acceptable if file_acceptable else "n"
+
+                if file_acceptable != "y":
+                    collected_details = collect_user_details(request_header)
+                    save_user_info(filename, collected_details)
+
+            else:
+                collected_details = collect_user_details(request_header)
+                save_user_info(filename, collected_details)
+
+        else:
+            collected_details = collect_user_details(request_header)
+            save_user_info(filename, collected_details)
+            confirm_and_proceed(collected_details)
+
+        info = SimpleNamespace(**collected_details)
+
+        token_valid = True
+        while token_valid:
+            request_header = copy.deepcopy(base_request_header)
+            request_header["Authorization"] = f"Bearer {token}"
+
+            # call function to check and book slots
+            token_valid = check_and_book(
+                request_header,
+                info.beneficiary_dtls,
+                info.location_dtls,
+                info.search_option,
+                min_slots=info.minimum_slots,
+                ref_freq=info.refresh_freq,
+                auto_book=info.auto_book,
+                start_date=info.start_date,
+                vaccine_type=info.vaccine_type,
+                fee_type=info.fee_type,
+            )
+
+            # check if token is still valid
+            beneficiaries_list = requests.get(BENEFICIARIES_URL, headers=request_header)
+            if beneficiaries_list.status_code == 200:
+                token_valid = True
+
+            else:
+                # if token invalid, regenerate OTP and new token
+                beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
+                print("Token is INVALID.")
+                token_valid = False
+
+                tryOTP = input("Try for a new Token? (y/n Default y): ")
+                if tryOTP.lower() == "y" or not tryOTP:
+                    if not mobile:
+                        mobile = input("Enter the registered mobile number: ")
+                    token = generate_token_OTP(mobile, base_request_header)
+                    token_valid = True
+                else:
+                    print("Exiting")
+                    os.system("pause")
+
+    except Exception as e:
+        print(str(e))
+        print("Exiting Script")
+        os.system("pause")
+
+
+if __name__ == "__main__":
+    main()
