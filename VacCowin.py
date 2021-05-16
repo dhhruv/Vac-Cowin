@@ -12,7 +12,7 @@ import requests
 from utils.appointment import check_and_book
 from utils.displayData import display_info_dict
 from utils.generateOTP import generate_token_OTP
-from utils.UserInfo import (
+from utils.userInfo import (
     collect_user_details,
     confirm_and_proceed,
     get_saved_user_info,
