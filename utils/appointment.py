@@ -8,10 +8,10 @@ import time
 import requests
 from inputimeout import TimeoutOccurred, inputimeout
 
-from captcha import captchaBuilder
-from checkCalender import check_calendar_by_district, check_calendar_by_pincode
-from displayData import display_table
-from getData import get_min_age
+from utils.captcha import captchaBuilder
+from utils.checkCalender import check_calendar_by_district, check_calendar_by_pincode
+from utils.displayData import display_table
+from utils.getData import get_min_age
 
 BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
 BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"

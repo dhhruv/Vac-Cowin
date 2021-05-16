@@ -1,22 +1,18 @@
-#!/usr/bin/env python3
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import argparse
 import copy
-import datetime
 import os
 import sys
 from types import SimpleNamespace
 
 import requests
 
-from appointment import book_appointment, check_and_book, generate_captcha
-from captcha import captchaBuilder
-from checkCalender import check_calendar_by_district, check_calendar_by_pincode
-from displayData import display_info_dict, display_table
-from generateOTP import generate_token_OTP
-from getData import get_beneficiaries, get_districts, get_min_age, get_pincodes
-from preferences import get_fee_type_preference, get_vaccine_preference
-from UserInfo import (
+from utils.appointment import check_and_book
+from utils.displayData import display_info_dict
+from utils.generateOTP import generate_token_OTP
+from utils.UserInfo import (
     collect_user_details,
     confirm_and_proceed,
     get_saved_user_info,

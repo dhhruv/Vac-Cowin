@@ -4,7 +4,7 @@ import sys
 
 import requests
 
-from displayData import display_table
+from utils.displayData import display_table
 
 BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
 BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"

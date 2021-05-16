@@ -4,9 +4,9 @@ import os
 import sys
 from collections import Counter
 
-from displayData import display_info_dict
-from getData import get_beneficiaries, get_districts, get_pincodes
-from preferences import get_fee_type_preference, get_vaccine_preference
+from utils.displayData import display_info_dict
+from utils.getData import get_beneficiaries, get_districts, get_pincodes
+from utils.preferences import get_fee_type_preference, get_vaccine_preference
 
 BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
 BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
