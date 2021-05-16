@@ -1,2 +1,7 @@
-plyer==2.0.0
-requests==2.25.1
+requests
+tabulate
+inputimeout
+svglib==1.0.1
+reportlab
+pyinstaller
+pysimplegui
