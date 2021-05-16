@@ -19,6 +19,6 @@
     </a>
 </p>
 
-<p><b>README.md for VacCowin 2.0 is still in Implementation...</b></p>
+<p align='center'><b>README.md for VacCowin 2.0 is still in Implementation...</b></p>
 
 
