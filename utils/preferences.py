@@ -39,7 +39,7 @@ else:
 
 def getVaccinePreference():
     print(
-        "It seems you're trying to find a slot for your first dose. Do you have a vaccine preference?"
+        "It seems that you're trying to find a Slot for your First Dose. Do you have a Preference for Vaccine Type?"
     )
     preference = input(
         "Enter 0 for No Preference, 1 for COVISHIELD, 2 for COVAXIN, or 3 for SPUTNIK V. Default 0 : "
@@ -59,7 +59,7 @@ def getVaccinePreference():
 
 
 def getFeeTypePreference():
-    print("\nDo you have a fee type preference?")
+    print("\nDo you have a Preference for Fee Type?")
     preference = input(
         "Enter 0 for No Preference, 1 for Free Only, or 2 for Paid Only. Default 0 : "
     )

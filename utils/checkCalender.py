@@ -77,14 +77,14 @@ def checkCalenderByDistrict(
             )
 
             if resp.status_code == 401:
-                print("TOKEN INVALID")
+                print("TOKEN is INVALID!")
                 return False
 
             elif resp.status_code == 200:
                 resp = resp.json()
                 if "centers" in resp:
                     print(
-                        f"Centers available in {location['district_name']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
+                        f"Centres are available in {location['district_name']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
                     options += viableOptions(
                         resp, minimum_slots, min_age_booking, fee_type, dose
@@ -138,14 +138,14 @@ def checkCalenderByPincode(
             )
 
             if resp.status_code == 401:
-                print("TOKEN INVALID")
+                print("TOKEN is INVALID!")
                 return False
 
             elif resp.status_code == 200:
                 resp = resp.json()
                 if "centers" in resp:
                     print(
-                        f"Centers available in {location['pincode']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
+                        f"Centres are available in {location['pincode']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
                     options += viableOptions(
                         resp, minimum_slots, min_age_booking, fee_type, dose

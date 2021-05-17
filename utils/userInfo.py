@@ -46,31 +46,32 @@ else:
 
 def confirmAndProceed(collected_details):
     print(
-        "\n================================= Confirm Info =================================\n"
+        "\n================================= Confirm the Information =================================\n"
     )
     displayInfoDict(collected_details)
 
-    confirm = input("\nProceed with above info (y/n Default y) : ")
+    confirm = input("\nProceed with the above Information (y/n Default y) : ")
     confirm = confirm if confirm else "y"
     if confirm != "y":
-        print("Details not confirmed. Exiting process.")
+        print("Details not Confirmed. Exiting the Process.")
+        print("Please Wait...")
         os.system("pause")
         sys.exit()
 
 
 def saveUserInfo(filename, details):
     print(
-        "\n================================= Save Info =================================\n"
+        "\n================================= Save Information =================================\n"
     )
     save_info = input(
-        "Would you like to save this as a JSON file for easy use next time?: (y/n Default y): "
+        "Would you like to save this Session's Data as a JSON File for easy use the next time?: (y/n Default y): "
     )
     save_info = save_info if save_info else "y"
     if save_info == "y":
         with open(filename, "w") as f:
             json.dump(details, f)
 
-        print(f"Info saved to {filename} in {os.getcwd()}")
+        print(f"Information saved to {filename} in {os.getcwd()}")
 
 
 def getSavedUserInfo(filename):
@@ -82,11 +83,13 @@ def getSavedUserInfo(filename):
 
 def collectUserDetails(request_header):
     # Get Beneficiaries
-    print("Fetching registered beneficiaries.. ")
+    print("Fetching the Registered Beneficiaries... ")
     beneficiary_dtls = getBeneficiaries(request_header)
 
     if len(beneficiary_dtls) == 0:
-        print("There should be at least one beneficiary. Exiting.")
+        print("There should be at least one Beneficiary.")
+        print("Please Login to the CoWIN Portal to Add a Beneficiary.")
+        print("Exiting")
         os.system("pause")
         sys.exit(1)
 
@@ -99,7 +102,7 @@ def collectUserDetails(request_header):
             "\n================================= Important =================================\n"
         )
         print(
-            f"All beneficiaries in one attempt should be of same vaccination status (same dose). Found {statuses}"
+            f"All Beneficiaries trying to book slot in one attempt should be of same Vaccination Status (Same Dose). Found {statuses}"
         )
         os.system("pause")
         sys.exit(1)
@@ -113,9 +116,11 @@ def collectUserDetails(request_header):
             "\n================================= Important =================================\n"
         )
         print(
-            f"Some of the beneficiaries have a set vaccine preference ({vaccines}) and some do not."
+            f"Some of the Beneficiaries have a set the Vaccine Preference ({vaccines}) and some do not."
         )
-        print("Results will be filtered to show only the set vaccine preference.")
+        print(
+            "Results will be filtered to show only according to the set Vaccine Preference."
+        )
         os.system("pause")
 
     if len(vaccines) != 1:
@@ -123,7 +128,7 @@ def collectUserDetails(request_header):
             "\n================================= Important =================================\n"
         )
         print(
-            f"All beneficiaries in one attempt should have the same vaccine type. Found {len(vaccines)}"
+            f"All Beneficiaries in one attempt should have the same Vaccine type. Found {len(vaccines)}"
         )
         os.system("pause")
         sys.exit(1)
@@ -141,7 +146,7 @@ def collectUserDetails(request_header):
     )
     # get search method to use
     search_option = input(
-        """Search by Pincode? Or by State/District? \nEnter 1 for Pincode or 2 for State/District. (Default 2) : """
+        """Search by Pincode? OR by State & District? \nEnter 1 for Pincode or 2 for State & District. (Default 2) : """
     )
 
     if not search_option or int(search_option) not in [1, 2]:
@@ -163,7 +168,7 @@ def collectUserDetails(request_header):
 
     # Set filter condition
     minimum_slots = input(
-        f"Filter out centers with availability less than ? Minimum {len(beneficiary_dtls)} : "
+        f"Filter out Centres with Vaccine availability less than ? Minimum {len(beneficiary_dtls)} : "
     )
     if minimum_slots:
         minimum_slots = (
@@ -176,13 +181,13 @@ def collectUserDetails(request_header):
 
     # Get refresh frequency
     refresh_freq = input(
-        "How often do you want to refresh the calendar (in seconds)? Default 15. Minimum 5. : "
+        "How often do you want to load Data from the Portal (in Seconds)? Default 15. Minimum 5. : "
     )
     refresh_freq = int(refresh_freq) if refresh_freq and int(refresh_freq) >= 5 else 15
 
     # Get search start date
     start_date = input(
-        "\nSearch for next seven day starting from when?\nUse 1 for today, 2 for tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: "
+        "\nSearch for next seven day starting from when? \nUse 1 for Today, 2 for Tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: "
     )
     if not start_date:
         start_date = 2
@@ -192,20 +197,20 @@ def collectUserDetails(request_header):
         try:
             datetime.datetime.strptime(start_date, "%d-%m-%Y")
         except ValueError:
-            print("Invalid Date! Proceeding with tomorrow.")
+            print("Invalid Date! Proceeding with Tomorrow's Date.")
             start_date = 2
 
     # Get preference of Free/Paid option
     fee_type = getFeeTypePreference()
 
     print(
-        "\n=========== CAUTION! =========== CAUTION! CAUTION! =============== CAUTION! =======\n"
+        "\n============================ PROCEED WITH CAUTION! ============================\n"
     )
     print(
-        "===== BE CAREFUL WITH THIS OPTION! AUTO-BOOKING WILL BOOK THE FIRST AVAILABLE CENTRE, DATE, AND A RANDOM SLOT! ====="
+        "===== BE CAREFUL WITH THIS OPTION! AUTO-BOOKING WILL BOOK THE FIRST AVAILABLE CENTRE, DATE, AND A RANDOM SLOT! =====\n"
     )
     auto_book = input(
-        "Do you want to enable auto-booking? (yes-please or no) Default no: "
+        "Do you want to Enable the Auto-Booking Function? (yes-please or no) Default no: "
     )
     auto_book = "no" if not auto_book else auto_book
 

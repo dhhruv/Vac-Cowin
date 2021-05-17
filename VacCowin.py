@@ -57,7 +57,7 @@ else:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--token", help="Pass token directly")
+    parser.add_argument("--token", help="Passing the token directly")
     args = parser.parse_args()
 
     filename = "vaccine-booking-details.json"
@@ -149,7 +149,7 @@ def main():
             else:
                 # if token invalid, regenerate OTP and new token
                 beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
-                print("Token is INVALID.")
+                print("Token is INVALID!")
                 token_valid = False
 
                 tryOTP = input("Do you want to try for a new Token? (y/n Default y): ")

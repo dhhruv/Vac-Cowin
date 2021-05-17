@@ -83,7 +83,7 @@ def bookAppointment(request_header, details):
             print(f"Booking Response : {resp.text}")
 
             if resp.status_code == 401:
-                print("TOKEN INVALID !!")
+                print("TOKEN is INVALID!")
                 return False
 
             elif resp.status_code == 200:
@@ -94,7 +94,7 @@ def bookAppointment(request_header, details):
                 print(
                     "                        Congratulations! You've Successfully Booked a Slot!                       "
                 )
-                print("\nPress any key thrice to exit program.")
+                print("\nPress any key thrice to Exit the Program.")
                 os.system("pause")
                 os.system("pause")
                 os.system("pause")
@@ -204,7 +204,7 @@ def checkAndBook(
                 choice = f"1.{random_slot}"
             else:
                 choice = inputimeout(
-                    prompt="----------> Wait 20 seconds for updated options OR \n----------> Enter a choice e.g: 1.4 for (1st Centre 4th Slot): ",
+                    prompt="----------> Wait 20 seconds for Updated Options OR \n----------> Enter a choice e.g: 1.4 for (1st Centre & 4th Slot): ",
                     timeout=20,
                 )
 
@@ -228,7 +228,7 @@ def checkAndBook(
                 choice = choice.split(".")
                 choice = [int(item) for item in choice]
                 print(
-                    f"============> Got Choice: Center #{choice[0]}, Slot #{choice[1]}"
+                    f"============> Got a Choice: Center #{choice[0]}, Slot #{choice[1]}"
                 )
 
                 new_req = {
@@ -244,10 +244,10 @@ def checkAndBook(
                     "slot": options[choice[0] - 1]["slots"][choice[1] - 1],
                 }
 
-                print(f"Booking with info: {new_req}")
+                print(f"Booking with Information: {new_req}")
                 return bookAppointment(request_header, new_req)
 
             except IndexError:
-                print("============> Invalid Option!")
+                print("============> Invalid Option Entered!")
                 os.system("pause")
                 pass

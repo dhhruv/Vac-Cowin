@@ -47,7 +47,7 @@ def generateTokenOTP(mobile, request_header):
     """
 
     if not mobile:
-        print("Mobile number cannot be empty")
+        print("Mobile Number cannot be empty. Please Try Again...")
         os.system("pause")
         sys.exit()
 
@@ -62,19 +62,19 @@ def generateTokenOTP(mobile, request_header):
 
             if txnId.status_code == 200:
                 print(
-                    f"Successfully requested OTP for mobile number {mobile} at {datetime.datetime.today()}.."
+                    f"Successfully Requested OTP for the Mobile Number {mobile} at {datetime.datetime.today()}.."
                 )
                 txnId = txnId.json()["txnId"]
 
                 OTP = input(
-                    "Enter OTP (If this takes more than 2 minutes, press Enter to retry): "
+                    "Enter OTP (If you don't recieve OTP in 2 minutes, Press Enter to Retry): "
                 )
                 if OTP:
                     data = {
                         "otp": sha256(str(OTP).encode("utf-8")).hexdigest(),
                         "txnId": txnId,
                     }
-                    print(f"Validating OTP..")
+                    print(f"Validating OTP. Please Wait...")
 
                     token = requests.post(
                         url="https://cdn-api.co-vin.in/api/v2/auth/validateMobileOtp",
@@ -88,10 +88,12 @@ def generateTokenOTP(mobile, request_header):
                         return token
 
                     else:
-                        print("Unable to Validate OTP")
+                        print("Unable to Validate OTP...")
                         print(f"Response: {token.text}")
 
-                        retry = input(f"Retry with {mobile} ? (y/n Default y): ")
+                        retry = input(
+                            f"Want to Retry with the {mobile} ? (y/n Default y): "
+                        )
                         retry = retry if retry else "y"
                         if retry == "y":
                             pass
@@ -99,10 +101,10 @@ def generateTokenOTP(mobile, request_header):
                             sys.exit()
 
             else:
-                print("Unable to Generate OTP")
+                print("Unable to Generate OTP...")
                 print(txnId.status_code, txnId.text)
 
-                retry = input(f"Retry with {mobile} ? (y/n Default y): ")
+                retry = input(f"Want to Retry with the {mobile} ? (y/n Default y): ")
                 retry = retry if retry else "y"
                 if retry == "y":
                     pass

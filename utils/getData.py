@@ -44,7 +44,7 @@ else:
 
 def getPincodes():
     locations = []
-    pincodes = input("Enter comma separated index numbers of pincodes to monitor: ")
+    pincodes = input("Enter comma separated Pincodes to monitor (Priority wise): ")
     for idx, pincode in enumerate(pincodes.split(",")):
         pincode = {"pincode": pincode, "alert_freq": 440 + ((2 * idx) * 110)}
         locations.append(pincode)
@@ -71,7 +71,7 @@ def getDistricts(request_header):
             refined_states.append(tmp)
 
         displayTable(refined_states)
-        state = int(input("\nEnter State index: "))
+        state = int(input("\nEnter State Index from the Table: "))
         state_id = states[state - 1]["state_id"]
 
         districts = requests.get(
@@ -89,7 +89,7 @@ def getDistricts(request_header):
 
             displayTable(refined_districts)
             reqd_districts = input(
-                "\nEnter comma separated index numbers of districts to monitor : "
+                "\nEnter comma separated index numbers of Districts to monitor : "
             )
             districts_idx = [int(idx) - 1 for idx in reqd_districts.split(",")]
             reqd_districts = [
@@ -102,19 +102,19 @@ def getDistricts(request_header):
                 if idx in districts_idx
             ]
 
-            print(f"Selected districts: ")
+            print(f"Selected Districts are: ")
             displayTable(reqd_districts)
             return reqd_districts
 
         else:
-            print("Unable to fetch districts")
+            print("Unable to fetch the Districts...")
             print(districts.status_code)
             print(districts.text)
             os.system("pause")
             sys.exit(1)
 
     else:
-        print("Unable to fetch states")
+        print("Unable to fetch the States...")
         print(states.status_code)
         print(states.text)
         os.system("pause")
@@ -151,20 +151,20 @@ def getBeneficiaries(request_header):
         displayTable(refined_beneficiaries)
         print(
             """
-        ################# IMPORTANT NOTES #################
-        # 1. While selecting beneficiaries, make sure that selected beneficiaries are all taking the same dose: either first OR second.
-        #    Please do no try to club together booking for first dose for one beneficiary and second dose for another beneficiary.
-        #
-        # 2. While selecting beneficiaries, also make sure that beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN.
-        #    Please do no try to club together booking for beneficiary taking COVISHIELD with beneficiary taking COVAXIN.
-        #
-        # 3. If you're selecting multiple beneficiaries, make sure all are of the same age group (45+ or 18+) as defined by the govt.
-        #    Please do not try to club together booking for younger and older beneficiaries.
-        ###################################################
+        ################# IMPORTANT THINGS TO BE REMEMBERED #################\n
+        # 1. While selecting Beneficiaries, make sure that selected Beneficiaries are all taking the same dose: either their First OR Second.
+        #    Please do no try to club together booking for first dose for one Beneficiary and second dose for another Beneficiary. Recommended to do both seperately.
+        
+        # 2. While selecting Beneficiaries, also make sure that Beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN OR SPUTNIK V.
+        #    Please do no try to club together booking for Beneficiary taking COVISHIELD with Beneficiary taking COVAXIN and other possibilities.
+        
+        # 3. If you're selecting multiple Beneficiaries, make sure all are of the same Age Group (45+ or 18+) as defined by the Government.
+        #    Please do not try to club together booking for Younger and Older Beneficiaries at the same time.\n
+        ###################################################333333333333333333
         """
         )
         reqd_beneficiaries = input(
-            "Enter comma separated index numbers of beneficiaries to book for : "
+            "Enter comma separated index numbers of Beneficiaries to book for : "
         )
         beneficiary_idx = [int(idx) - 1 for idx in reqd_beneficiaries.split(",")]
         reqd_beneficiaries = [
@@ -179,12 +179,12 @@ def getBeneficiaries(request_header):
             if idx in beneficiary_idx
         ]
 
-        print(f"Selected beneficiaries: ")
+        print(f"Selected Beneficiaries are: ")
         displayTable(reqd_beneficiaries)
         return reqd_beneficiaries
 
     else:
-        print("Unable to fetch beneficiaries")
+        print("Unable to Fetch Beneficiaries...")
         print(beneficiaries.status_code)
         print(beneficiaries.text)
         os.system("pause")

@@ -1,7 +1,7 @@
 import tabulate
 
 
-def viable_options(resp, minimum_slots, min_age_booking, fee_type, dose):
+def viableOptions(resp, minimum_slots, min_age_booking, fee_type, dose):
     options = []
     if len(resp["centers"]) >= 0:
         for center in resp["centers"]:
@@ -17,14 +17,16 @@ def viable_options(resp, minimum_slots, min_age_booking, fee_type, dose):
                     and (center["fee_type"] in fee_type)
                 ):
                     out = {
-                        "name": center["name"],
-                        "district": center["district_name"],
-                        "pincode": center["pincode"],
-                        "center_id": center["center_id"],
-                        "available": availability,
-                        "date": session["date"],
-                        "slots": session["slots"],
-                        "session_id": session["session_id"],
+                        "Name": center["name"],
+                        "District": center["district_name"],
+                        "Pincode": center["pincode"],
+                        "Centre-ID": center["center_id"],
+                        "New-Field": str(
+                            session["vaccine"] + "-" + session["fee-type"]
+                        ),
+                        "Date": session["date"],
+                        "Slots": session["slots"],
+                        "Session-ID": session["session_id"],
                     }
                     options.append(out)
 
