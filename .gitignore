@@ -1,4 +1,5 @@
-env
+env/
 .vscode
 *.json
 __pycache__
+utils/__pycache__/

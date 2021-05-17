@@ -202,7 +202,7 @@ def checkAndBook(
 
         else:
             for i in range(refresh_freq, 0, -1):
-                msg = f"No viable options. Next update in {i} seconds.."
+                msg = f"No viable options. Next update in {i} seconds.."  # No options available / Unavailable
                 print(msg, end="\r", flush=True)
                 sys.stdout.flush()
                 time.sleep(1)
