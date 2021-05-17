@@ -160,7 +160,7 @@ def getBeneficiaries(request_header):
         
         # 3. If you're selecting multiple Beneficiaries, make sure all are of the same Age Group (45+ or 18+) as defined by the Government.
         #    Please do not try to club together booking for Younger and Older Beneficiaries at the same time.\n
-        ###################################################333333333333333333
+        #####################################################################
         """
         )
         reqd_beneficiaries = input(
