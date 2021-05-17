@@ -50,6 +50,7 @@ def checkCalenderByDistrict(
     minimum_slots,
     min_age_booking,
     fee_type,
+    dose,
 ):
     """
     This function
@@ -86,7 +87,7 @@ def checkCalenderByDistrict(
                         f"Centers available in {location['district_name']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
                     options += viableOptions(
-                        resp, minimum_slots, min_age_booking, fee_type
+                        resp, minimum_slots, min_age_booking, fee_type, dose
                     )
 
             else:
@@ -111,6 +112,7 @@ def checkCalenderByPincode(
     minimum_slots,
     min_age_booking,
     fee_type,
+    dose,
 ):
     """
     This function
@@ -146,7 +148,7 @@ def checkCalenderByPincode(
                         f"Centers available in {location['pincode']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
                     options += viableOptions(
-                        resp, minimum_slots, min_age_booking, fee_type
+                        resp, minimum_slots, min_age_booking, fee_type, dose
                     )
 
             else:

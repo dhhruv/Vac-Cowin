@@ -92,17 +92,44 @@ def collectUserDetails(request_header):
 
     # Make sure all beneficiaries have the same type of vaccine
     vaccine_types = [beneficiary["vaccine"] for beneficiary in beneficiary_dtls]
-    vaccines = Counter(vaccine_types)
+    statuses = [beneficiary["status"] for beneficiary in beneficiary_dtls]
 
-    if len(vaccines.keys()) != 1:
+    if len(set(statuses)) > 1:
         print(
-            f"All beneficiaries in one attempt should have the same vaccine type. Found {len(vaccines.keys())}"
+            "\n================================= Important =================================\n"
+        )
+        print(
+            f"All beneficiaries in one attempt should be of same vaccination status (same dose). Found {statuses}"
         )
         os.system("pause")
         sys.exit(1)
 
     # if all([beneficiary['status'] == 'Partially Vaccinated' for beneficiary in beneficiary_dtls]) else None
+    vaccines = set(vaccine_types)
+    if len(vaccines) > 1 and ("" in vaccines):
+        vaccines.remove("")
+        vaccine_types.remove("")
+        print(
+            "\n================================= Important =================================\n"
+        )
+        print(
+            f"Some of the beneficiaries have a set vaccine preference ({vaccines}) and some do not."
+        )
+        print("Results will be filtered to show only the set vaccine preference.")
+        os.system("pause")
+
+    if len(vaccines) != 1:
+        print(
+            "\n================================= Important =================================\n"
+        )
+        print(
+            f"All beneficiaries in one attempt should have the same vaccine type. Found {len(vaccines)}"
+        )
+        os.system("pause")
+        sys.exit(1)
+
     vaccine_type = vaccine_types[0]
+
     if not vaccine_type:
         print(
             "\n================================= Vaccine Info =================================\n"
@@ -155,7 +182,7 @@ def collectUserDetails(request_header):
 
     # Get search start date
     start_date = input(
-        "\nSearch for next seven day starting from when?\nUse 1 for today, 2 for tomorrow, or provide a date in the format yyyy-mm-dd. Default 2: "
+        "\nSearch for next seven day starting from when?\nUse 1 for today, 2 for tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: "
     )
     if not start_date:
         start_date = 2
@@ -163,8 +190,9 @@ def collectUserDetails(request_header):
         start_date = int(start_date)
     else:
         try:
-            datetime.datetime.strptime(start_date, "%Y-%m-%d")
+            datetime.datetime.strptime(start_date, "%d-%m-%Y")
         except ValueError:
+            print("Invalid Date! Proceeding with tomorrow.")
             start_date = 2
 
     # Get preference of Free/Paid option

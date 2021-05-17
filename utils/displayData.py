@@ -1,13 +1,18 @@
 import tabulate
 
 
-def viableOptions(resp, minimum_slots, min_age_booking, fee_type):
+def viable_options(resp, minimum_slots, min_age_booking, fee_type, dose):
     options = []
     if len(resp["centers"]) >= 0:
         for center in resp["centers"]:
             for session in center["sessions"]:
+                availability = (
+                    session["available_capacity_dose1"]
+                    if dose == 1
+                    else session["available_capacity_dose2"]
+                )
                 if (
-                    (session["available_capacity"] >= minimum_slots)
+                    (availability >= minimum_slots)
                     and (session["min_age_limit"] <= min_age_booking)
                     and (center["fee_type"] in fee_type)
                 ):
@@ -16,7 +21,7 @@ def viableOptions(resp, minimum_slots, min_age_booking, fee_type):
                         "district": center["district_name"],
                         "pincode": center["pincode"],
                         "center_id": center["center_id"],
-                        "available": session["available_capacity"],
+                        "available": availability,
                         "date": session["date"],
                         "slots": session["slots"],
                         "session_id": session["session_id"],

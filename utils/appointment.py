@@ -54,12 +54,11 @@ def generateCaptcha(request_header):
         "================================= RECIEVING CAPTCHA =================================================="
     )
     resp = requests.post(CAPTCHA_URL, headers=request_header)
-    print(f"Booking Response Code: {resp.status_code}")
+    print(f"Captcha Response Code: {resp.status_code}")
 
     if resp.status_code == 200:
         # captchaBuilder(resp.json())
-        captcha = captchaBuilder(resp.json())
-        return captcha
+        return captchaBuilder(resp.json())
 
 
 def bookAppointment(request_header, details):
@@ -135,6 +134,13 @@ def checkAndBook(
         vaccine_type = kwargs["vaccine_type"]
         fee_type = kwargs["fee_type"]
 
+        dose = (
+            2
+            if [beneficiary["status"] for beneficiary in beneficiary_dtls][0]
+            == "Partially Vaccinated"
+            else 1
+        )
+
         if isinstance(start_date, int) and start_date == 2:
             start_date = (
                 datetime.datetime.today() + datetime.timedelta(days=1)
@@ -153,6 +159,7 @@ def checkAndBook(
                 minimum_slots,
                 min_age_booking,
                 fee_type,
+                dose,
             )
         else:
             options = checkCalenderByPincode(
@@ -163,6 +170,7 @@ def checkAndBook(
                 minimum_slots,
                 min_age_booking,
                 fee_type,
+                dose,
             )
 
         if isinstance(options, bool):
