@@ -102,7 +102,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ### Important:
 
-- This is a Proof of Concept Project. **I OR the Team** do NOT endorse or condone, in any shape or form, automating any monitoring/booking tasks. **Use this at your own risk.**
+- This is a Proof of Concept Project. **I OR the Team** do NOT endorse or condone, in any shape or form, automating any monitoring/booking tasks. **It's only made for Educational Purposes. Use this at your own risk.**
 - This **Python Script CANNOT book slots automatically**. It doesn't skip any of the steps that a User would have to take on the official portal. You will still have to enter the OTP and Captcha as you do in the CoWIN Portal.
 - **Do NOT** use unless all the beneficiaries selected are supposed to get the same Vaccine and Dose.
 - There is **no option** to Register a new Phone/Mobile or add beneficiaries. This can be used only after beneficiary has been added through the official Portal/App.
