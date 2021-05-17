@@ -62,6 +62,10 @@ def main():
 
     filename = "vaccine-booking-details.json"
     mobile = None
+
+    print("Running VacCowin...")
+    beep(500, 150)
+
     try:
         base_request_header = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36",
@@ -70,7 +74,7 @@ def main():
         if args.token:
             token = args.token
         else:
-            mobile = input("Enter the registered mobile number: ")
+            mobile = input("Enter the Registered Mobile Number: ")
             token = generateTokenOTP(mobile, base_request_header)
 
         request_header = copy.deepcopy(base_request_header)
@@ -81,13 +85,13 @@ def main():
                 "\n=================================== Note ===================================\n"
             )
             print(
-                f"Info from perhaps a previous run already exists in {filename} in this directory."
+                f"Information from a Previous Session already exists in {filename} in this directory."
             )
             print(
-                f"IMPORTANT: If this is your first time running this version of the application, DO NOT USE THE FILE!"
+                f"IMPORTANT: If you're running this application for the first time then we recommend NOT To USE THE FILE!"
             )
             try_file = input(
-                "Would you like to see the details and confirm to proceed? (y/n Default y): "
+                "Would you like to see the details from that file and confirm to proceed? (y/n Default y): "
             )
             try_file = try_file if try_file else "y"
 
@@ -98,7 +102,9 @@ def main():
                 )
                 displayInfoDict(collected_details)
 
-                file_acceptable = input("\nProceed with above info? (y/n Default n): ")
+                file_acceptable = input(
+                    "\nProceed with the above Information? (y/n Default n): "
+                )
                 file_acceptable = file_acceptable if file_acceptable else "n"
 
                 if file_acceptable != "y":
@@ -146,19 +152,19 @@ def main():
                 print("Token is INVALID.")
                 token_valid = False
 
-                tryOTP = input("Try for a new Token? (y/n Default y): ")
+                tryOTP = input("Do you want to try for a new Token? (y/n Default y): ")
                 if tryOTP.lower() == "y" or not tryOTP:
                     if not mobile:
-                        mobile = input("Enter the registered mobile number: ")
+                        mobile = input("Enter the Registered Mobile Number: ")
                     token = generateTokenOTP(mobile, base_request_header)
                     token_valid = True
                 else:
-                    print("Exiting")
+                    print("Exiting the Script...")
                     os.system("pause")
 
     except Exception as e:
         print(str(e))
-        print("Exiting Script")
+        print("Exiting the Script...")
         os.system("pause")
 
 

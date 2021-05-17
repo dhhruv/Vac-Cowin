@@ -51,7 +51,7 @@ else:
 
 def generateCaptcha(request_header):
     print(
-        "================================= GETTING CAPTCHA =================================================="
+        "================================= RECIEVING CAPTCHA =================================================="
     )
     resp = requests.post(CAPTCHA_URL, headers=request_header)
     print(f"Booking Response Code: {resp.status_code}")
@@ -76,7 +76,7 @@ def bookAppointment(request_header, details):
             details["captcha"] = captcha
 
             print(
-                "================================= ATTEMPTING BOOKING =================================================="
+                "================================= ATTEMPTING TO BOOK =================================================="
             )
 
             resp = requests.post(BOOKING_URL, headers=request_header, json=details)
@@ -84,7 +84,7 @@ def bookAppointment(request_header, details):
             print(f"Booking Response : {resp.text}")
 
             if resp.status_code == 401:
-                print("TOKEN INVALID")
+                print("TOKEN INVALID !!")
                 return False
 
             elif resp.status_code == 200:
@@ -93,7 +93,7 @@ def bookAppointment(request_header, details):
                     "##############    BOOKED!  ############################    BOOKED!  ##############"
                 )
                 print(
-                    "                        Hey, Hey, Hey! It's your lucky day!                       "
+                    "                        Congratulations! You've Successfully Booked a Slot!                       "
                 )
                 print("\nPress any key thrice to exit program.")
                 os.system("pause")
@@ -196,13 +196,13 @@ def checkAndBook(
                 choice = f"1.{random_slot}"
             else:
                 choice = inputimeout(
-                    prompt="----------> Wait 20 seconds for updated options OR \n----------> Enter a choice e.g: 1.4 for (1st center 4th slot): ",
+                    prompt="----------> Wait 20 seconds for updated options OR \n----------> Enter a choice e.g: 1.4 for (1st Centre 4th Slot): ",
                     timeout=20,
                 )
 
         else:
             for i in range(refresh_freq, 0, -1):
-                msg = f"No viable options. Next update in {i} seconds.."  # No options available / Unavailable
+                msg = f"No Options Available right now. Next Update in {i} seconds.."
                 print(msg, end="\r", flush=True)
                 sys.stdout.flush()
                 time.sleep(1)
