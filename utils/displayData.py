@@ -22,7 +22,7 @@ def viableOptions(resp, minimum_slots, min_age_booking, fee_type, dose):
                         "Pincode": center["pincode"],
                         "Centre-ID": center["center_id"],
                         "New-Field": str(
-                            session["vaccine"] + "-" + session["fee-type"]
+                            session["vaccine"] + "-" + session["fee_type"]
                         ),
                         "Date": session["date"],
                         "Slots": session["slots"],
