@@ -74,6 +74,8 @@ pip install -r requirements.txt
 ```
 ## Usage
 
+Will be Updated after Testing...
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
