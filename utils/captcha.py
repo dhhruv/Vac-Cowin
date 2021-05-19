@@ -5,7 +5,7 @@ from reportlab.graphics import renderPM
 from svglib.svglib import svg2rlg
 
 
-def captcha_builder(resp):
+def captchaBuilder(resp):
     with open("captcha.svg", "w") as f:
         f.write(re.sub('(<path d=)(.*?)(fill="none"/>)', "", resp["captcha"]))
 
