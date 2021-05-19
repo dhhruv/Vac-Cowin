@@ -39,11 +39,13 @@
 
 ## About
 
-**VacCowin** is a CLI based Python Script that can be used to **Automate** Covid Vaccination Slot Booking on Co-WIN Platform. This script rechecks after every few seconds and when the slots are available, it confirms the slot after you enter the captcha shown on the screen.
+**VacCowin** is a CLI based Python Script that can be used to perform tasks such as OTP Generation till Vaccination Slot Booking from Co-WIN Platform directly from your Terminal.  This script rechecks after every few seconds and when the slots are available, it **confirms the slot only after you enter the captcha shown on the screen.**
 
 Since India has started the Vaccination Drive for those above 18 years of age, there is a very heavy rush and slots get booked soon. This script will come in handy for booking those slots as soon as they open.
 
-The data used is retrieved using the open public/protected APIs at [API Setu](https://apisetu.gov.in/public/marketplace/api/cowin). It works on both Linux and Windows.
+**IMPORTANT: This is a Proof of Concept (POC) Project. I OR the Team do NOT endorse or condone, in any shape or form, automating any monitoring/booking tasks. It's only made for Educational Purposes. Use this at your own risk.**
+
+The data used is retrieved using the open APIs at [API Setu](https://apisetu.gov.in/public/marketplace/api/cowin). It works on both Linux and Windows.
 
 ## Getting Started
 
@@ -105,7 +107,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - This is a Proof of Concept Project. **I OR the Team** do NOT endorse or condone, in any shape or form, automating any monitoring/booking tasks. **It's only made for Educational Purposes. Use this at your own risk.**
 - This **Python Script CANNOT book slots automatically**. It doesn't skip any of the steps that a User would have to take on the official portal. You will still have to enter the OTP and Captcha as you do in the CoWIN Portal.
 - **Do NOT** use unless all the beneficiaries selected are supposed to get the same Vaccine and Dose.
-- There is **no option** to Register a new Phone/Mobile or add beneficiaries. This can be used only after beneficiary has been added through the official Portal/App.
+- There is **no option** to Register a new Phone/Mobile or add beneficiaries for now. This can be used only after beneficiary has been added through the official Portal/App.
 - Be careful if you're choosing to use the auto-book feature. It will blindly select first available Vaccination **Centre, Date (Both Sorted Ascending) and a RANDOM slot**. I would not recommend using this feature unless and until it's crucial.
 - If you accidentally booked a slot you didn't want to then don’t worry. You can always log in to the CoWIN Portal and cancel/re-schedule that.
 - **API Details (Do read the first paragraph): https://apisetu.gov.in/public/marketplace/api/cowin/cowin-public-v2**
