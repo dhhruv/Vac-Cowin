@@ -13,7 +13,7 @@
 	<img src="http://ForTheBadge.com/images/badges/made-with-python.svg">
 </p>
 <p align="center">   
-	<a href="https://dev.to/dhhruv/vaccowin-check-available-slots-for-cowin-vaccination-right-from-your-terminal-23f5">
+	<a href="https://dev.to/dhhruv/vaccowin-book-cowin-slots-directly-from-your-terminal-bba">
     	<img src="https://img.shields.io/badge/dev.to-0A0A0A?style=for-the-badge&logo=dev.to&logoColor=white">
     </a>
 </p>
