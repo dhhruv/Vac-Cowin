@@ -185,20 +185,46 @@ def collectUserDetails(request_header):
     )
     refresh_freq = int(refresh_freq) if refresh_freq and int(refresh_freq) >= 5 else 15
 
-    # Get search start date
-    start_date = input(
-        "\nSearch for next seven day starting from when? \nUse 1 for Today, 2 for Tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: "
-    )
-    if not start_date:
-        start_date = 2
-    elif start_date in ["1", "2"]:
-        start_date = int(start_date)
+       #Checking if partially vaccinated and thereby checking the the due date for dose2
+    if all([beneficiary['status'] == 'Partially Vaccinated' for beneficiary in beneficiary_dtls]):
+        today=datetime.datetime.today()
+        today=today.strftime("%d-%m-%Y")
+        due_date = [beneficiary["dose2_due_date"] for beneficiary in beneficiary_dtls]
+        dates=Counter(due_date)
+        if len(dates.keys()) != 1:
+            print(
+                f"All beneficiaries in one attempt should have the same due date. Found {len(dates.keys())}"
+            )
+            os.system("pause")
+            sys.exit(1)
+            
+            
+        if (datetime.datetime.strptime(due_date[0], "%d-%m-%Y")-datetime.datetime.strptime(str(today), "%d-%m-%Y")).days > 0:
+            print("\nHaven't reached the due date for your second dose")
+            search_due_date=input(
+                "\nDo you want to search for the week starting from your due date(y/n) Default n:"
+            )
+            if search_due_date=="y":
+                
+                start_date=due_date[0]
+            else:
+                os.system("pause")
+                sys.exit(1)
     else:
-        try:
-            datetime.datetime.strptime(start_date, "%d-%m-%Y")
-        except ValueError:
-            print("Invalid Date! Proceeding with Tomorrow's Date.")
+        # Get search start date
+        start_date = input(
+                "\nSearch for next seven day starting from when?\nUse 1 for today, 2 for tomorrow, or provide a date in the format dd-mm-yyyy. Default 2: "
+            )
+        if not start_date:
             start_date = 2
+        elif start_date in ["1", "2"]:
+            start_date = int(start_date)
+        else:
+            try:
+                datetime.datetime.strptime(start_date, "%d-%m-%Y")
+            except ValueError:
+                start_date = 2
+                print('Invalid Date! Proceeding with tomorrow.')
 
     # Get preference of Free/Paid option
     fee_type = getFeeTypePreference()
