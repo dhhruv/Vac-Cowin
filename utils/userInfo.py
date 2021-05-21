@@ -189,7 +189,7 @@ def collectUserDetails(request_header):
     if all([beneficiary['status'] == 'Partially Vaccinated' for beneficiary in beneficiary_dtls]):
         today=datetime.datetime.today()
         today=today.strftime("%d-%m-%Y")
-        due_date = [beneficiary["due_date"] for beneficiary in beneficiary_dtls]
+        due_date = [beneficiary["dose2_due_date"] for beneficiary in beneficiary_dtls]
         dates=Counter(due_date)
         if len(dates.keys()) != 1:
             print(

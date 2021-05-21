@@ -169,9 +169,10 @@ def getBeneficiaries(request_header):
                 "vaccine": beneficiary["vaccine"],
                 "age": beneficiary["age"],
                 "status": beneficiary["vaccination_status"],
+                "dose1_date":beneficiary["dose1_date"],
             }
             if vaccinated:
-                tmp["due_date"]=beneficiary["dose2_due_date"]
+                tmp["due_date"]=beneficiary["dose2_due_date"].strftime("%d-%m-%Y")
                 
             refined_beneficiaries.append(tmp)
 
@@ -201,11 +202,20 @@ def getBeneficiaries(request_header):
                 "vaccine": item["vaccine"],
                 "age": item["age"],
                 "status": item["vaccination_status"],
-                "due_date":item["dose2_due_date"].strftime("%d-%m-%Y")
+                "dose1_date":item["dose1_date"]
             }
             for idx, item in enumerate(beneficiaries)
-            if idx in beneficiary_idx if vaccinated
+            if idx in beneficiary_idx
         ]
+        
+        for beneficiary in reqd_beneficiaries:
+            if vaccinated:
+                days_remaining=getDose2DueDate(beneficiary["vaccine"])
+                        
+                dose1_date=datetime.datetime.strptime(beneficiary["dose1_date"], "%d-%m-%Y")
+                dose2DueDate=dose1_date+datetime.timedelta(days=days_remaining)
+                beneficiary["dose2_due_date"]=dose2DueDate.strftime("%d-%m-%Y")
+
 
         print(f"Selected Beneficiaries are: ")
         displayTable(reqd_beneficiaries)
