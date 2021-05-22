@@ -147,12 +147,18 @@ def checkAndBook(
         vaccine_type = kwargs["vaccine_type"]
         fee_type = kwargs["fee_type"]
 
-        dose = (
+        """ dose = (
             2
             if [beneficiary["status"] for beneficiary in beneficiary_dtls][0]
             == "Partially Vaccinated"
             else 1
+        ) """
+
+        dose = (
+            2 if any(beneficiary["vaccine"] for beneficiary in beneficiary_dtls) else 1
         )
+
+        # dose = (2 if any(detail['vaccine'] for detail in collected_details["beneficiary_dtls"]) else 1)
 
         if isinstance(start_date, int) and start_date == 2:
             start_date = (
@@ -257,8 +263,7 @@ def checkAndBook(
                         beneficiary["bref_id"] for beneficiary in beneficiary_dtls
                     ],
                     "dose": 2
-                    if [beneficiary["status"] for beneficiary in beneficiary_dtls][0]
-                    == "Partially Vaccinated"
+                    if any(beneficiary["vaccine"] for beneficiary in beneficiary_dtls)
                     else 1,
                     "center_id": options[choice[0] - 1]["center_id"],
                     "session_id": options[choice[0] - 1]["session_id"],

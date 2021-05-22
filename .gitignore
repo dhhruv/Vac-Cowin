@@ -3,4 +3,5 @@ env/
 *.json
 __pycache__
 utils/__pycache__/
-./req.txt
+req.txt
+SS/
