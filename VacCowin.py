@@ -8,10 +8,12 @@ import sys
 from types import SimpleNamespace
 
 import requests
+from colorama import Fore, Style, init
 
 from utils.appointment import checkAndBook
 from utils.displayData import displayInfoDict
 from utils.generateOTP import generateTokenOTP
+from utils.urls import *
 from utils.userInfo import (
     collectUserDetails,
     confirmAndProceed,
@@ -19,13 +21,7 @@ from utils.userInfo import (
     saveUserInfo,
 )
 
-BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
-BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
-CALENDAR_URL_DISTRICT = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={0}&date={1}"
-CALENDAR_URL_PINCODE = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByPin?pincode={0}&date={1}"
-CAPTCHA_URL = "https://cdn-api.co-vin.in/api/v2/auth/getRecaptcha"
-OTP_PUBLIC_URL = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"
-OTP_PRO_URL = "https://cdn-api.co-vin.in/api/v2/auth/generateMobileOTP"
+init(convert=True)
 
 WARNING_BEEP_DURATION = (1000, 2000)
 
@@ -63,7 +59,8 @@ def main():
     filename = "vaccine-booking-details.json"
     mobile = None
 
-    print("Running VacCowin...")
+    print()
+    print(f"{Fore.YELLOW}Running VacCowin...")
     beep(500, 150)
 
     try:
@@ -74,13 +71,14 @@ def main():
         if args.token:
             token = args.token
         else:
-            mobile = input("Enter the Registered Mobile Number: ")
+            mobile = input("Enter the Registered Mobile Number:")
             token = generateTokenOTP(mobile, base_request_header)
 
         request_header = copy.deepcopy(base_request_header)
         request_header["Authorization"] = f"Bearer {token}"
 
         if os.path.exists(filename):
+            print(f"{Fore.RESET}", end="")
             print(
                 "\n=================================== Note ===================================\n"
             )
@@ -88,23 +86,28 @@ def main():
                 f"Information from a Previous Session already exists in {filename} in this directory."
             )
             print(
-                f"IMPORTANT: If you're running this application for the first time then we recommend NOT To USE THE FILE!"
+                f"IMPORTANT: If you're running this application for the first time then we recommend NOT To USE THE FILE!\n"
             )
+            print(f"{Fore.YELLOW}", end="")
             try_file = input(
                 "Would you like to see the details from that file and confirm to proceed? (y/n Default y): "
             )
+            print(f"{Fore.RESET}", end="")
             try_file = try_file if try_file else "y"
 
             if try_file == "y":
+                print(f"{Fore.RESET}", end="")
                 collected_details = getSavedUserInfo(filename)
                 print(
                     "\n================================= Info =================================\n"
                 )
                 displayInfoDict(collected_details)
 
+                print(f"{Fore.YELLOW}", end="")
                 file_acceptable = input(
                     "\nProceed with the above Information? (y/n Default n): "
                 )
+                print(f"{Fore.RESET}", end="")
                 file_acceptable = file_acceptable if file_acceptable else "n"
 
                 if file_acceptable != "y":
@@ -149,20 +152,24 @@ def main():
             else:
                 # if token invalid, regenerate OTP and new token
                 beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
-                print("Token is INVALID!")
+                print(f"{Fore.RED}Token is INVALID!")
                 token_valid = False
 
+                print(f"{Fore.YELLOW}", end="")
                 tryOTP = input("Do you want to try for a new Token? (y/n Default y): ")
                 if tryOTP.lower() == "y" or not tryOTP:
                     if not mobile:
+                        print(f"{Fore.YELLOW}", end="")
                         mobile = input("Enter the Registered Mobile Number: ")
                     token = generateTokenOTP(mobile, base_request_header)
                     token_valid = True
                 else:
+                    print(f"{Fore.RED}", end="")
                     print("Exiting the Script...")
                     os.system("pause")
 
     except Exception as e:
+        print(f"{Fore.RED}", end="")
         print(str(e))
         print("Exiting the Script...")
         os.system("pause")
@@ -172,5 +179,5 @@ if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\n\nUser Aborted the Program.\nExiting, Please Wait...")
+        print(f"\n\n{Fore.RED}User Aborted the Program.\nExiting, Please Wait...")
         sys.exit()

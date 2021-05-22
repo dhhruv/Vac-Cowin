@@ -3,18 +3,14 @@ import os
 import sys
 
 import requests
+from colorama import Fore, Style, init
 
 from utils.displayData import displayTable
-
-BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
-BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
-CALENDAR_URL_DISTRICT = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={0}&date={1}"
-CALENDAR_URL_PINCODE = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByPin?pincode={0}&date={1}"
-CAPTCHA_URL = "https://cdn-api.co-vin.in/api/v2/auth/getRecaptcha"
-OTP_PUBLIC_URL = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"
-OTP_PRO_URL = "https://cdn-api.co-vin.in/api/v2/auth/generateMobileOTP"
+from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
+
+init(convert=True)
 
 
 try:
@@ -44,7 +40,9 @@ else:
 
 def getPincodes():
     locations = []
+    print(f"{Fore.YELLOW}", end="")
     pincodes = input("Enter comma separated Pincodes to monitor (Priority wise): ")
+    print(f"{Fore.RESET}", end="")
     for idx, pincode in enumerate(pincodes.split(",")):
         pincode = {"pincode": pincode, "alert_freq": 440 + ((2 * idx) * 110)}
         locations.append(pincode)
@@ -71,7 +69,9 @@ def getDistricts(request_header):
             refined_states.append(tmp)
 
         displayTable(refined_states)
+        print(f"{Fore.YELLOW}", end="")
         state = int(input("\nEnter State Index from the Table: "))
+        print(f"{Fore.RESET}", end="")
         state_id = states[state - 1]["state_id"]
 
         districts = requests.get(
@@ -88,9 +88,11 @@ def getDistricts(request_header):
                 refined_districts.append(tmp)
 
             displayTable(refined_districts)
+            print(f"{Fore.YELLOW}", end="")
             reqd_districts = input(
                 "\nEnter comma separated index numbers of Districts to monitor : "
             )
+            print(f"{Fore.RESET}", end="")
             districts_idx = [int(idx) - 1 for idx in reqd_districts.split(",")]
             reqd_districts = [
                 {
@@ -102,22 +104,28 @@ def getDistricts(request_header):
                 if idx in districts_idx
             ]
 
+            print(f"{Fore.CYAN}", end="")
             print(f"Selected Districts are: ")
+            print(f"{Fore.RESET}", end="")
             displayTable(reqd_districts)
             return reqd_districts
 
         else:
+            print(f"{Fore.RED}", end="")
             print("Unable to fetch the Districts...")
             print(districts.status_code)
             print(districts.text)
             os.system("pause")
+            print(f"{Fore.RESET}", end="")
             sys.exit(1)
 
     else:
+        print(f"{Fore.RED}", end="")
         print("Unable to fetch the States...")
         print(states.status_code)
         print(states.text)
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         sys.exit(1)
 
 
@@ -163,9 +171,11 @@ def getBeneficiaries(request_header):
         #####################################################################
         """
         )
+        print(f"{Fore.YELLOW}", end="")
         reqd_beneficiaries = input(
             "Enter comma separated index numbers of Beneficiaries to book for : "
         )
+        print(f"{Fore.RESET}", end="")
         beneficiary_idx = [int(idx) - 1 for idx in reqd_beneficiaries.split(",")]
         reqd_beneficiaries = [
             {
@@ -179,15 +189,19 @@ def getBeneficiaries(request_header):
             if idx in beneficiary_idx
         ]
 
+        print(f"{Fore.CYAN}", end="")
         print(f"Selected Beneficiaries are: ")
+        print(f"{Fore.RESET}", end="")
         displayTable(reqd_beneficiaries)
         return reqd_beneficiaries
 
     else:
+        print(f"{Fore.RED}", end="")
         print("Unable to Fetch Beneficiaries...")
         print(beneficiaries.status_code)
         print(beneficiaries.text)
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         return []
 
 

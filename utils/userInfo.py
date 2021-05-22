@@ -4,20 +4,16 @@ import os
 import sys
 from collections import Counter
 
+from colorama import Fore, Style, init
+
 from utils.displayData import displayInfoDict
 from utils.getData import getBeneficiaries, getDistricts, getPincodes
 from utils.preferences import getFeeTypePreference, getVaccinePreference
-
-BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
-BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
-CALENDAR_URL_DISTRICT = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={0}&date={1}"
-CALENDAR_URL_PINCODE = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByPin?pincode={0}&date={1}"
-CAPTCHA_URL = "https://cdn-api.co-vin.in/api/v2/auth/getRecaptcha"
-OTP_PUBLIC_URL = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"
-OTP_PRO_URL = "https://cdn-api.co-vin.in/api/v2/auth/generateMobileOTP"
+from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
 
+init(convert=True)
 
 try:
     import winsound
@@ -50,12 +46,16 @@ def confirmAndProceed(collected_details):
     )
     displayInfoDict(collected_details)
 
+    print(f"{Fore.YELLOW}", end="")
     confirm = input("\nProceed with the above Information (y/n Default y) : ")
+    print(f"{Fore.RESET}", end="")
     confirm = confirm if confirm else "y"
     if confirm != "y":
+        print(f"{Fore.RED}", end="")
         print("Details not Confirmed. Exiting the Process.")
         print("Please Wait...")
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         sys.exit()
 
 
@@ -63,15 +63,18 @@ def saveUserInfo(filename, details):
     print(
         "\n================================= Save Information =================================\n"
     )
+    print(f"{Fore.YELLOW}", end="")
     save_info = input(
         "Would you like to save this Session's Data as a JSON File for easy use the next time?: (y/n Default y): "
     )
+    print(f"{Fore.RESET}", end="")
     save_info = save_info if save_info else "y"
     if save_info == "y":
         with open(filename, "w") as f:
             json.dump(details, f)
-
+        print(f"{Fore.GREEN}", end="")
         print(f"Information saved to {filename} in {os.getcwd()}")
+        print(f"{Fore.RESET}", end="")
 
 
 def getSavedUserInfo(filename):
@@ -83,14 +86,18 @@ def getSavedUserInfo(filename):
 
 def collectUserDetails(request_header):
     # Get Beneficiaries
+    print(f"{Fore.CYAN}", end="")
     print("Fetching the Registered Beneficiaries... ")
+    print(f"{Fore.RESET}", end="")
     beneficiary_dtls = getBeneficiaries(request_header)
 
     if len(beneficiary_dtls) == 0:
+        print(f"{Fore.RED}", end="")
         print("There should be at least one Beneficiary.")
         print("Please Login to the CoWIN Portal to Add a Beneficiary.")
         print("Exiting")
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         sys.exit(1)
 
     # Make sure all beneficiaries have the same type of vaccine
@@ -98,6 +105,7 @@ def collectUserDetails(request_header):
     statuses = [beneficiary["status"] for beneficiary in beneficiary_dtls]
 
     if len(set(statuses)) > 1:
+        print(f"{Fore.RED}", end="")
         print(
             "\n================================= Important =================================\n"
         )
@@ -105,6 +113,7 @@ def collectUserDetails(request_header):
             f"All Beneficiaries trying to book slot in one attempt should be of same Vaccination Status (Same Dose). Found {statuses}"
         )
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         sys.exit(1)
 
     # if all([beneficiary['status'] == 'Partially Vaccinated' for beneficiary in beneficiary_dtls]) else None
@@ -112,6 +121,7 @@ def collectUserDetails(request_header):
     if len(vaccines) > 1 and ("" in vaccines):
         vaccines.remove("")
         vaccine_types.remove("")
+        print(f"{Fore.RESET}", end="")
         print(
             "\n================================= Important =================================\n"
         )
@@ -124,6 +134,7 @@ def collectUserDetails(request_header):
         os.system("pause")
 
     if len(vaccines) != 1:
+        print(f"{Fore.RED}", end="")
         print(
             "\n================================= Important =================================\n"
         )
@@ -131,6 +142,7 @@ def collectUserDetails(request_header):
             f"All Beneficiaries in one attempt should have the same Vaccine type. Found {len(vaccines)}"
         )
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         sys.exit(1)
 
     vaccine_type = vaccine_types[0]
@@ -145,9 +157,11 @@ def collectUserDetails(request_header):
         "\n================================= Location Info =================================\n"
     )
     # get search method to use
+    print(f"{Fore.YELLOW}", end="")
     search_option = input(
-        """Search by Pincode? OR by State & District? \nEnter 1 for Pincode or 2 for State & District. (Default 2) : """
+        """\nSearch by Pincode? OR by State & District? \nEnter 1 for Pincode or 2 for State & District. (Default 2) : """
     )
+    print(f"{Fore.RESET}", end="")
 
     if not search_option or int(search_option) not in [1, 2]:
         search_option = 2
@@ -167,9 +181,11 @@ def collectUserDetails(request_header):
     )
 
     # Set filter condition
+    print(f"{Fore.YELLOW}", end="")
     minimum_slots = input(
-        f"Filter out Centres with Vaccine availability less than ? Minimum {len(beneficiary_dtls)} : "
+        f"\nFilter out Centres with Vaccine availability less than ? Minimum {len(beneficiary_dtls)} : "
     )
+    print(f"{Fore.RESET}", end="")
     if minimum_slots:
         minimum_slots = (
             int(minimum_slots)
@@ -180,15 +196,19 @@ def collectUserDetails(request_header):
         minimum_slots = len(beneficiary_dtls)
 
     # Get refresh frequency
+    print(f"{Fore.YELLOW}", end="")
     refresh_freq = input(
         "How often do you want to load Data from the Portal (in Seconds)? Default 15. Minimum 5. : "
     )
+    print(f"{Fore.RESET}", end="")
     refresh_freq = int(refresh_freq) if refresh_freq and int(refresh_freq) >= 5 else 15
 
     # Get search start date
+    print(f"{Fore.YELLOW}", end="")
     start_date = input(
         "\nSearch for next seven day starting from when? \nUse 1 for Today, 2 for Tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: "
     )
+    print(f"{Fore.RESET}", end="")
     if not start_date:
         start_date = 2
     elif start_date in ["1", "2"]:
@@ -197,7 +217,9 @@ def collectUserDetails(request_header):
         try:
             datetime.datetime.strptime(start_date, "%d-%m-%Y")
         except ValueError:
+            print(f"{Fore.BLUE}", end="")
             print("Invalid Date! Proceeding with Tomorrow's Date.")
+            print(f"{Fore.RESET}", end="")
             start_date = 2
 
     # Get preference of Free/Paid option
@@ -209,9 +231,11 @@ def collectUserDetails(request_header):
     print(
         "===== BE CAREFUL WITH THIS OPTION! AUTO-BOOKING WILL BOOK THE FIRST AVAILABLE CENTRE, DATE, AND A RANDOM SLOT! =====\n"
     )
+    print(f"{Fore.YELLOW}", end="")
     auto_book = input(
         "Do you want to Enable the Auto-Booking Function? (yes-please or no) Default no: "
     )
+    print(f"{Fore.RESET}", end="")
     auto_book = "no" if not auto_book else auto_book
 
     collected_details = {

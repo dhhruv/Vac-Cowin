@@ -3,18 +3,14 @@ import os
 import sys
 
 import requests
+from colorama import Fore, Style, init
 
 from utils.displayData import viableOptions
-
-BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
-BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
-CALENDAR_URL_DISTRICT = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={0}&date={1}"
-CALENDAR_URL_PINCODE = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByPin?pincode={0}&date={1}"
-CAPTCHA_URL = "https://cdn-api.co-vin.in/api/v2/auth/getRecaptcha"
-OTP_PUBLIC_URL = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"
-OTP_PRO_URL = "https://cdn-api.co-vin.in/api/v2/auth/generateMobileOTP"
+from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
+
+init(convert=True)
 
 
 try:
@@ -77,15 +73,19 @@ def checkCalenderByDistrict(
             )
 
             if resp.status_code == 401:
+                print(f"{Fore.RED}", end="")
                 print("TOKEN is INVALID!")
+                print(f"{Fore.RESET}", end="")
                 return False
 
             elif resp.status_code == 200:
                 resp = resp.json()
                 if "centers" in resp:
+                    print(f"{Fore.YELLOW}", end="")
                     print(
                         f"Centres are available in {location['district_name']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
+                    print(f"{Fore.RESET}", end="")
                     options += viableOptions(
                         resp, minimum_slots, min_age_booking, fee_type, dose
                     )
@@ -100,7 +100,9 @@ def checkCalenderByDistrict(
         return options
 
     except Exception as e:
+        print(f"{Fore.RED}", end="")
         print(str(e))
+        print(f"{Fore.RESET}", end="")
         beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
 
 
@@ -138,15 +140,19 @@ def checkCalenderByPincode(
             )
 
             if resp.status_code == 401:
+                print(f"{Fore.RED}", end="")
                 print("TOKEN is INVALID!")
+                print(f"{Fore.RESET}", end="")
                 return False
 
             elif resp.status_code == 200:
                 resp = resp.json()
                 if "centers" in resp:
+                    print(f"{Fore.YELLOW}", end="")
                     print(
                         f"Centres are available in {location['pincode']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
+                    print(f"{Fore.RESET}", end="")
                     options += viableOptions(
                         resp, minimum_slots, min_age_booking, fee_type, dose
                     )
@@ -162,5 +168,7 @@ def checkCalenderByPincode(
         return options
 
     except Exception as e:
+        print(f"{Fore.RED}", end="")
         print(str(e))
+        print(f"{Fore.RESET}", end="")
         beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])

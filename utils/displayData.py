@@ -1,7 +1,11 @@
 import tabulate
+from colorama import Fore, Style, init
+
+init(convert=True)
 
 
 def viableOptions(resp, minimum_slots, min_age_booking, fee_type, dose):
+    print(f"{Fore.RESET}", end="")
     options = []
     if len(resp["centers"]) >= 0:
         for center in resp["centers"]:
@@ -45,10 +49,12 @@ def displayTable(dict_list):
     """
     header = ["idx"] + list(dict_list[0].keys())
     rows = [[idx + 1] + list(x.values()) for idx, x in enumerate(dict_list)]
+    print(f"{Fore.RESET}", end="")
     print(tabulate.tabulate(rows, header, tablefmt="grid"))
 
 
 def displayInfoDict(details):
+    print(f"{Fore.RESET}", end="")
     for key, value in details.items():
         if isinstance(value, list):
             if all(isinstance(item, dict) for item in value):
