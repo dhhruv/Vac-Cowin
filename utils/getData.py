@@ -156,6 +156,7 @@ def getBeneficiaries(request_header):
             }
             refined_beneficiaries.append(tmp)
 
+        print(f"{Fore.RESET}", end="")
         displayTable(refined_beneficiaries)
         print(
             """
@@ -169,7 +170,7 @@ def getBeneficiaries(request_header):
         # 3. If you're selecting multiple Beneficiaries, make sure all are of the same Age Group (45+ or 18+) as defined by the Government.
         #    Please do not try to club together booking for Younger and Older Beneficiaries at the same time.\n
         #####################################################################
-        """
+        \n"""
         )
         print(f"{Fore.YELLOW}", end="")
         reqd_beneficiaries = input(

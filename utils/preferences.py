@@ -35,6 +35,7 @@ else:
 
 
 def getVaccinePreference():
+    print(f"{Fore.YELLOW}", end="")
     print(
         "\nIt seems that you're trying to find a Slot for your First Dose. Do you have a Preference for Vaccine Type?\n"
     )

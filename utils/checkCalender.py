@@ -56,6 +56,7 @@ def checkCalenderByDistrict(
         4. Returns list of vaccination centers & slots if available
     """
     try:
+        print(f"{Fore.RESET}", end="")
         print(
             "==================================================================================="
         )
@@ -124,6 +125,7 @@ def checkCalenderByPincode(
         4. Returns list of vaccination centers & slots if available
     """
     try:
+        print(f"{Fore.RESET}", end="")
         print(
             "==================================================================================="
         )

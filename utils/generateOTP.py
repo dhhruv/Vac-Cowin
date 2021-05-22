@@ -77,7 +77,7 @@ def generateTokenOTP(mobile, request_header):
                         "otp": sha256(str(OTP).encode("utf-8")).hexdigest(),
                         "txnId": txnId,
                     }
-                    print(f"{Fore.YELLOW}", end="")
+                    print(f"{Fore.CYAN}", end="")
                     print(f"Validating OTP. Please Wait...")
                     print(f"{Fore.RESET}", end="")
 

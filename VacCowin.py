@@ -60,7 +60,9 @@ def main():
     mobile = None
 
     print()
-    print(f"{Fore.YELLOW}Running VacCowin...")
+    print(f"{Fore.CYAN}", end="")
+    print("Running VacCowin...")
+    print(f"{Fore.RESET}", end="")
     beep(500, 150)
 
     try:
@@ -71,7 +73,9 @@ def main():
         if args.token:
             token = args.token
         else:
+            print(f"{Fore.YELLOW}", end="")
             mobile = input("Enter the Registered Mobile Number:")
+            print(f"{Fore.RESET}", end="")
             token = generateTokenOTP(mobile, base_request_header)
 
         request_header = copy.deepcopy(base_request_header)
@@ -82,9 +86,11 @@ def main():
             print(
                 "\n=================================== Note ===================================\n"
             )
+            print(f"{Fore.GREEN}", end="")
             print(
                 f"Information from a Previous Session already exists in {filename} in this directory."
             )
+            print(f"{Fore.CYAN}", end="")
             print(
                 f"IMPORTANT: If you're running this application for the first time then we recommend NOT To USE THE FILE!\n"
             )
@@ -152,7 +158,9 @@ def main():
             else:
                 # if token invalid, regenerate OTP and new token
                 beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
-                print(f"{Fore.RED}Token is INVALID!")
+                print(f"{Fore.RED}", end="")
+                print("Token is INVALID!")
+                print(f"{Fore.RESET}", end="")
                 token_valid = False
 
                 print(f"{Fore.YELLOW}", end="")
@@ -167,12 +175,14 @@ def main():
                     print(f"{Fore.RED}", end="")
                     print("Exiting the Script...")
                     os.system("pause")
+                    print(f"{Fore.RESET}", end="")
 
     except Exception as e:
         print(f"{Fore.RED}", end="")
         print(str(e))
         print("Exiting the Script...")
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
 
 
 if __name__ == "__main__":

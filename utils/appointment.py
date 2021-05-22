@@ -78,12 +78,15 @@ def bookAppointment(request_header, details):
             )
 
             resp = requests.post(BOOKING_URL, headers=request_header, json=details)
+            print(f"{Fore.CYAN}", end="")
             print(f"Booking Response Code: {resp.status_code}")
             print(f"Booking Response : {resp.text}")
+            print(f"{Fore.RESET}", end="")
 
             if resp.status_code == 401:
                 print(f"{Fore.RED}", end="")
                 print("TOKEN is INVALID!")
+                print(f"{Fore.RESET}", end="")
                 return False
 
             elif resp.status_code == 200:
@@ -95,11 +98,12 @@ def bookAppointment(request_header, details):
                 print(
                     "                        Congratulations! You've Successfully Booked a Slot!                       \n"
                 )
-                print(f"{Fore.RESET}", end="")
+
                 print("\nPress any key thrice to Exit the Program.")
                 os.system("pause")
                 os.system("pause")
                 os.system("pause")
+                print(f"{Fore.RESET}", end="")
                 sys.exit()
 
             elif resp.status_code == 400:
@@ -223,8 +227,10 @@ def checkAndBook(
 
         else:
             for i in range(refresh_freq, 0, -1):
+                print(f"{Fore.YELLOW}", end="")
                 msg = f"No Options Available right now. Next Update in {i} seconds.."
                 print(msg, end="\r", flush=True)
+                print(f"{Fore.RESET}", end="")
                 sys.stdout.flush()
                 time.sleep(1)
             choice = "."

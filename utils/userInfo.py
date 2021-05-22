@@ -41,6 +41,7 @@ else:
 
 
 def confirmAndProceed(collected_details):
+    print(f"{Fore.RESET}", end="")
     print(
         "\n================================= Confirm the Information =================================\n"
     )
@@ -60,6 +61,7 @@ def confirmAndProceed(collected_details):
 
 
 def saveUserInfo(filename, details):
+    print(f"{Fore.RESET}", end="")
     print(
         "\n================================= Save Information =================================\n"
     )
