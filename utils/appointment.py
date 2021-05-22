@@ -13,7 +13,6 @@ from utils.captcha import captchaBuilder
 from utils.checkCalender import checkCalenderByDistrict, checkCalenderByPincode
 from utils.displayData import displayTable
 from utils.getData import getMinAge
-from utils.textColours import bColours
 from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
