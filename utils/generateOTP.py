@@ -88,7 +88,7 @@ def generateTokenOTP(mobile, request_header):
                     )
                     if token.status_code == 200:
                         token = token.json()["token"]
-                        print(f"{Fore.CYAN}", end="")
+                        print(f"{Fore.GREEN}", end="")
                         print(f"Token Generated: {token}")
                         print(f"{Fore.RESET}", end="")
                         valid_token = True

@@ -73,7 +73,7 @@ def saveUserInfo(filename, details):
     save_info = save_info if save_info else "y"
     if save_info == "y":
         with open(filename, "w") as f:
-            json.dump(details, f)
+            json.dump(details, f, sort_keys=True, indent=4)
         print(f"{Fore.GREEN}", end="")
         print(f"Information saved to {filename} in {os.getcwd()}")
         print(f"{Fore.RESET}", end="")

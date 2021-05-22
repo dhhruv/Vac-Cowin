@@ -10,10 +10,9 @@ def viableOptions(resp, minimum_slots, min_age_booking, fee_type, dose):
     if len(resp["centers"]) >= 0:
         for center in resp["centers"]:
             for session in center["sessions"]:
-                availability = (
-                    session["available_capacity_dose1"]
-                    if dose == 1
-                    else session["available_capacity_dose2"]
+                availability = min(
+                    session[f"available_capacity_dose{dose}"],
+                    session["available_capacity"],
                 )
                 if (
                     (availability >= minimum_slots)
@@ -25,6 +24,8 @@ def viableOptions(resp, minimum_slots, min_age_booking, fee_type, dose):
                         "district": center["district_name"],
                         "pincode": center["pincode"],
                         "center_id": center["center_id"],
+                        "vaccine": session["vaccine"],
+                        "fee_type": center["fee_type"],
                         "available": availability,
                         "date": session["date"],
                         "slots": session["slots"],
