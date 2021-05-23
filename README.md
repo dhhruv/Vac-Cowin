@@ -199,7 +199,7 @@ Enter the Registered Mobile Number: ███████████
 Enter OTP: ███████████
 ```  
 
-11. When a Center with more than minimum number of Slots is available, the Program will make a Beep sound - having different frequency for different districts. It will then display the available options as shown in the Screenshot.
+11. When a Center with more than minimum number of Slots is available, the Program will make a Beep sound - having different frequency for different districts. It will then display the available options as shown in the [Screenshot](./assets/ss7.png).
 	
 
 12. Before the Next Update, you'll have 10 seconds to provide a choice in the given format ```centerIndex.slotIndex``` eg: The input```1.4``` will select the First Vaccination Center and its Fourth Slot.
