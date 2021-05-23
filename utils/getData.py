@@ -138,18 +138,19 @@ def getDose2DueDate(vaccine_type):
         return sputnikV_due_date
         
 def getBeneficiaries(request_header):
-    """
+       """
     This function
         1. Fetches all beneficiaries registered under the mobile number,
         2. Prompts user to select the applicable beneficiaries, and
         3. Returns the list of beneficiaries as list(dict)
     """
-    beneficiaries = requests.get(BENEFICIARIES_URL, headers=request_header)
-    
-    vaccinated=False #Vaccination status
-    
+    beneficiaries = fetch_beneficiaries(request_header)
+
+    vaccinated=False
+
     if beneficiaries.status_code == 200:
         beneficiaries = beneficiaries.json()["beneficiaries"]
+        
 
         refined_beneficiaries = []
         for beneficiary in beneficiaries:
@@ -158,10 +159,13 @@ def getBeneficiaries(request_header):
             )
             if beneficiary["vaccination_status"]=="Partially Vaccinated":
                 vaccinated=True
-                days_remaining=getDose2DueDate(beneficiary["vaccine"])
+                days_remaining=vaccine_dose2_duedate(beneficiary["vaccine"])
                                
                 dose1_date=datetime.datetime.strptime(beneficiary["dose1_date"], "%d-%m-%Y")
                 beneficiary["dose2_due_date"]=dose1_date+datetime.timedelta(days=days_remaining)
+            else:
+                vaccinated=False
+                #print(beneficiary_2)
 
             tmp = {
                 "bref_id": beneficiary["beneficiary_reference_id"],
@@ -169,30 +173,30 @@ def getBeneficiaries(request_header):
                 "vaccine": beneficiary["vaccine"],
                 "age": beneficiary["age"],
                 "status": beneficiary["vaccination_status"],
-                "dose1_date":beneficiary["dose1_date"],
+                "dose1_date":beneficiary["dose1_date"]
             }
             if vaccinated:
-                tmp["due_date"]=beneficiary["dose2_due_date"].strftime("%d-%m-%Y")
-                
+                tmp["due_date"]=beneficiary["dose2_due_date"]
             refined_beneficiaries.append(tmp)
 
-        displayTable(refined_beneficiaries)
+        display_table(refined_beneficiaries)
+        #print(refined_beneficiaries)
         print(
             """
-        ################# IMPORTANT THINGS TO BE REMEMBERED #################\n
-        # 1. While selecting Beneficiaries, make sure that selected Beneficiaries are all taking the same dose: either their First OR Second.
-        #    Please do no try to club together booking for first dose for one Beneficiary and second dose for another Beneficiary. Recommended to do both seperately.
-        
-        # 2. While selecting Beneficiaries, also make sure that Beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN OR SPUTNIK V.
-        #    Please do no try to club together booking for Beneficiary taking COVISHIELD with Beneficiary taking COVAXIN and other possibilities.
-        
-        # 3. If you're selecting multiple Beneficiaries, make sure all are of the same Age Group (45+ or 18+) as defined by the Government.
-        #    Please do not try to club together booking for Younger and Older Beneficiaries at the same time.\n
-        #####################################################################
+        ################# IMPORTANT NOTES #################
+        # 1. While selecting beneficiaries, make sure that selected beneficiaries are all taking the same dose: either first OR second.
+        #    Please do no try to club together booking for first dose for one beneficiary and second dose for another beneficiary.
+        #
+        # 2. While selecting beneficiaries, also make sure that beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN.
+        #    Please do no try to club together booking for beneficiary taking COVISHIELD with beneficiary taking COVAXIN.
+        #
+        # 3. If you're selecting multiple beneficiaries, make sure all are of the same age group (45+ or 18+) as defined by the govt.
+        #    Please do not try to club together booking for younger and older beneficiaries.
+        ###################################################
         """
         )
         reqd_beneficiaries = input(
-            "Enter comma separated index numbers of Beneficiaries to book for : "
+            "Enter comma separated index numbers of beneficiaries to book for : "
         )
         beneficiary_idx = [int(idx) - 1 for idx in reqd_beneficiaries.split(",")]
         reqd_beneficiaries = [
@@ -204,25 +208,25 @@ def getBeneficiaries(request_header):
                 "status": item["vaccination_status"],
                 "dose1_date":item["dose1_date"]
             }
+                                
             for idx, item in enumerate(beneficiaries)
             if idx in beneficiary_idx
         ]
-        
+
         for beneficiary in reqd_beneficiaries:
-            if vaccinated:
-                days_remaining=getDose2DueDate(beneficiary["vaccine"])
+                if beneficiary["status"]=="Partially Vaccinated":
+                    days_remaining=vaccine_dose2_duedate(beneficiary["vaccine"])
                         
-                dose1_date=datetime.datetime.strptime(beneficiary["dose1_date"], "%d-%m-%Y")
-                dose2DueDate=dose1_date+datetime.timedelta(days=days_remaining)
-                beneficiary["dose2_due_date"]=dose2DueDate.strftime("%d-%m-%Y")
+                    dose1_date=datetime.datetime.strptime(beneficiary["dose1_date"], "%d-%m-%Y")
+                    dose2DueDate=dose1_date+datetime.timedelta(days=days_remaining)
+                    beneficiary["dose2_due_date"]=dose2DueDate.strftime("%d-%m-%Y")
 
-
-        print(f"Selected Beneficiaries are: ")
-        displayTable(reqd_beneficiaries)
+        print(f"Selected beneficiaries: ")
+        display_table(reqd_beneficiaries)
         return reqd_beneficiaries
 
     else:
-        print("Unable to Fetch Beneficiaries...")
+        print("Unable to fetch beneficiaries")
         print(beneficiaries.status_code)
         print(beneficiaries.text)
         os.system("pause")
