@@ -13,7 +13,7 @@
 	<img src="http://ForTheBadge.com/images/badges/made-with-python.svg">
 </p>
 <p align="center">   
-	<a href="https://dev.to/dhhruv/vaccowin-book-cowin-slots-directly-from-your-terminal-bba">
+	<a href="https://dev.to/dhhruv/book-cowin-vaccination-slots-directly-from-your-terminal-7nb">
     	<img src="https://img.shields.io/badge/dev.to-0A0A0A?style=for-the-badge&logo=dev.to&logoColor=white">
     </a>
 </p>
@@ -199,7 +199,7 @@ Enter the Registered Mobile Number: ███████████
 Enter OTP: ███████████
 ```  
 
-11. When a Center with more than minimum number of Slots is available, the Program will make a Beep sound - having different frequency for different districts. It will then display the available options as shown in the [Screenshot](./assets/ss7.png).
+11. When a Center with more than minimum number of Slots is available, the Program will make a Beep sound - having different frequency for different districts. It will then display the available options as shown in the [Screenshot](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/ss7.png).
 	
 
 12. Before the Next Update, you'll have 10 seconds to provide a choice in the given format ```centerIndex.slotIndex``` eg: The input```1.4``` will select the First Vaccination Center and its Fourth Slot.
