@@ -121,8 +121,7 @@ pip install -r requirements.txt
 ```
 
 4. Selecting the State:
-	```
-	+-------+-----------------------------+  
+```+-------+-----------------------------+  
 	| idx   | state                       |  
 	+=======+=============================+  
 	| 1     | Andaman and Nicobar Islands |  
