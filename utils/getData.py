@@ -3,6 +3,7 @@ import os
 import sys
 
 import requests
+from colorama import Fore, Style, init
 
 from utils.displayData import displayTable
 
@@ -138,13 +139,13 @@ def getDose2DueDate(vaccine_type):
         return sputnikV_due_date
         
 def getBeneficiaries(request_header):
-       """
+    """
     This function
         1. Fetches all beneficiaries registered under the mobile number,
         2. Prompts user to select the applicable beneficiaries, and
         3. Returns the list of beneficiaries as list(dict)
     """
-    beneficiaries = fetch_beneficiaries(request_header)
+    beneficiaries = requests.get(BENEFICIARIES_URL, headers=request_header)
 
     vaccinated=False
 
@@ -159,7 +160,7 @@ def getBeneficiaries(request_header):
             )
             if beneficiary["vaccination_status"]=="Partially Vaccinated":
                 vaccinated=True
-                days_remaining=vaccine_dose2_duedate(beneficiary["vaccine"])
+                days_remaining=getDose2DueDate(beneficiary["vaccine"])
                                
                 dose1_date=datetime.datetime.strptime(beneficiary["dose1_date"], "%d-%m-%Y")
                 beneficiary["dose2_due_date"]=dose1_date+datetime.timedelta(days=days_remaining)
@@ -178,8 +179,9 @@ def getBeneficiaries(request_header):
             if vaccinated:
                 tmp["due_date"]=beneficiary["dose2_due_date"]
             refined_beneficiaries.append(tmp)
-
-        display_table(refined_beneficiaries)
+        
+        print(f"{Fore.RESET}", end="")
+        displayTable(refined_beneficiaries)
         #print(refined_beneficiaries)
         print(
             """
@@ -195,9 +197,11 @@ def getBeneficiaries(request_header):
         ###################################################
         """
         )
+        print(f"{Fore.YELLOW}", end="")
         reqd_beneficiaries = input(
             "Enter comma separated index numbers of beneficiaries to book for : "
         )
+        print(f"{Fore.RESET}", end="")
         beneficiary_idx = [int(idx) - 1 for idx in reqd_beneficiaries.split(",")]
         reqd_beneficiaries = [
             {
@@ -215,21 +219,25 @@ def getBeneficiaries(request_header):
 
         for beneficiary in reqd_beneficiaries:
                 if beneficiary["status"]=="Partially Vaccinated":
-                    days_remaining=vaccine_dose2_duedate(beneficiary["vaccine"])
+                    days_remaining=getDose2DueDate(beneficiary["vaccine"])
                         
                     dose1_date=datetime.datetime.strptime(beneficiary["dose1_date"], "%d-%m-%Y")
                     dose2DueDate=dose1_date+datetime.timedelta(days=days_remaining)
                     beneficiary["dose2_due_date"]=dose2DueDate.strftime("%d-%m-%Y")
-
-        print(f"Selected beneficiaries: ")
-        display_table(reqd_beneficiaries)
+        
+        print(f"{Fore.CYAN}", end="")
+        print(f"Selected Beneficiaries are: ")
+        print(f"{Fore.RESET}", end="")
+        displayTable(reqd_beneficiaries)
         return reqd_beneficiaries
 
     else:
+        print(f"{Fore.RED}", end="")
         print("Unable to fetch beneficiaries")
         print(beneficiaries.status_code)
         print(beneficiaries.text)
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         return []
 
 
