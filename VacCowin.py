@@ -74,7 +74,7 @@ def main():
             token = args.token
         else:
             print(f"{Fore.YELLOW}", end="")
-            mobile = input("Enter the Registered Mobile Number:")
+            mobile = input("Enter the Registered Mobile Number: ")
             print(f"{Fore.RESET}", end="")
             token = generateTokenOTP(mobile, base_request_header)
 
