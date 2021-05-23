@@ -96,7 +96,7 @@ def bookAppointment(request_header, details):
                     "##############    BOOKED!  ############################    BOOKED!  ##############"
                 )
                 print(
-                    "                        Congratulations! You've Successfully Booked a Slot!                       \n"
+                    "                Congratulations! You've Successfully Booked a Slot!                       \n"
                 )
 
                 print("\nPress any key thrice to Exit the Program.")
