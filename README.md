@@ -208,31 +208,31 @@ Enter OTP: ███████████
 
 1. Generating OTP and Token...
 
-![SS1](./assets/ss1.png)
+![SS1](https://github.com/dhhruv/Vac-Cowin/assets/ss1.png)
 
 2.  Fetching Registered Beneficiaries...
 
-![SS2](./assets/ss2.png)
+![SS2](https://github.com/dhhruv/Vac-Cowin/assets/ss2.png)
 
 3.  Selecting Beneficiaries...
 
-![SS3](./assets/ss3.png)
+![SS3](https://github.com/dhhruv/Vac-Cowin/assets/ss3.png)
 
 4.  Additional Information to be entered for Slot Booking...
 
-![SS4](./assets/ss4.png)
+![SS4](https://github.com/dhhruv/Vac-Cowin/assets/ss4.png)
 
 5.  Auto-Booking Function...
 
-![SS5](./assets/ss5.png)
+![SS5](https://github.com/dhhruv/Vac-Cowin/assets/ss5.png)
 
 6.  Save Information as JSON File...
 
-![SS6](./assets/ss6.png)
+![SS6](https://github.com/dhhruv/Vac-Cowin/assets/ss6.png)
 
 7.  Displaying Available Vaccination Centers and Booking Slots (Auto-Booking ON)...
 
-![SS7](./assets/ss7.png)
+![SS7](https://github.com/dhhruv/Vac-Cowin/assets/ss7.png)
 
 <!-- CONTRIBUTING -->
 ## Contributing
