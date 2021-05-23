@@ -270,6 +270,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - There is **no option** to Register a new Phone/Mobile or add beneficiaries for now. This can be used only after beneficiary has been added through the official Portal/App.
 - Be careful if you're choosing to use the auto-book feature. It will blindly select first available Vaccination **Centre, Date (Both Sorted Ascending) and a RANDOM slot**. I would not recommend using this feature unless and until it's crucial.
 - If you accidentally booked a slot you didn't want to then don’t worry. You can always log in to the CoWIN Portal and cancel/re-schedule that.
+- This goes without saying but, once you get your shot, please do help out any people around you who may not have a laptop or the know-how. For instance any sort of domestic help or literally the thousands of people who don't have the knowledge or luxury as we do.
 - **API Details (Do read the first paragraph): https://apisetu.gov.in/public/marketplace/api/cowin/cowin-public-v2**
 
 <p align='center'><b>Made with ❤ by Dhruv Panchal</b></p>
