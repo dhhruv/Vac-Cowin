@@ -203,6 +203,10 @@ Enter OTP: ███████████
 
 12. Before the Next Update, you'll have 10 seconds to provide a choice in the given format ```centerIndex.slotIndex``` eg: The input```1.4``` will select the First Vaccination Center and its Fourth Slot.
 
+## Working Screenshots:
+
+![SS1](./assets/ss1.png)
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
