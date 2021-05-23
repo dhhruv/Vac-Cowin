@@ -234,6 +234,10 @@ Enter OTP: ███████████
 
 ![SS7](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/ss7.png)
 
+8.  Successfully Booking a Slot **(If and only if you enter the Captcha correctly and in the mean time, all the slots are not booked)**
+
+![SS8](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/ss8.png)
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
