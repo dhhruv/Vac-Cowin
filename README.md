@@ -77,9 +77,10 @@ pip install -r requirements.txt
 ## How To Use
 
 1. Run the Script after performing the Initial Steps of [Getting Started](#getting-started):
-	```python VacCowin.py```
+	`python VacCowin.py`
 2. Select the Beneficiaries. Read the Important notes. You can select multiple beneficiaries by providing comma-separated index values such as `1,2`:
-	```
+
+```
   Running VacCowin...
   Enter the Registered Mobile Number: ██████████
   Successfully Requested OTP for the Mobile Number ██████████ at 2021-05-23 09:28:41.669816..
@@ -94,21 +95,21 @@ pip install -r requirements.txt
 |     1 | ██████████████ | █████████████ | ███████   |    ██ | ██████████████       |
 +-------+----------------+---------------+-----------+-------+----------------------+
 
-    ################# IMPORTANT THINGS TO BE REMEMBERED #################
+  ################# IMPORTANT THINGS TO BE REMEMBERED #################
 
-    # 1. While selecting Beneficiaries, make sure that selected Beneficiaries are all taking the same dose: either their First OR Second.
-    #    Please do no try to club together booking for first dose for one Beneficiary and second dose for another Beneficiary. Recommended to do both seperately.
+  # 1. While selecting Beneficiaries, make sure that selected Beneficiaries are all taking the same dose: either their First OR Second.
+  #    Please do no try to club together booking for first dose for one Beneficiary and second dose for another Beneficiary. Recommended to do both seperately.
 
-    # 2. While selecting Beneficiaries, also make sure that Beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN OR SPUTNIK V.
-    #    Please do no try to club together booking for Beneficiary taking COVISHIELD with Beneficiary taking COVAXIN and other possibilities.
+  # 2. While selecting Beneficiaries, also make sure that Beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN OR SPUTNIK V.
+  #    Please do no try to club together booking for Beneficiary taking COVISHIELD with Beneficiary taking COVAXIN and other possibilities.
 
-    # 3. If you're selecting multiple Beneficiaries, make sure all are of the same Age Group (45+ or 18+) as defined by the Government.
-    #    Please do not try to club together booking for Younger and Older Beneficiaries at the same time.
+  # 3. If you're selecting multiple Beneficiaries, make sure all are of the same Age Group (45+ or 18+) as defined by the Government.
+  #    Please do not try to club together booking for Younger and Older Beneficiaries at the same time.
 
-    #####################################################################
+  #####################################################################
 	  
 	Enter comma separated index numbers of Beneficiaries to book for : 1
-	```
+```
 
 
 3. Ensure that the Beneficiaries are getting selected:
