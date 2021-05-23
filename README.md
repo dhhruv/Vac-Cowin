@@ -198,6 +198,7 @@ Do you want to try for a new Token? (y/n Default y): y
 Enter the Registered Mobile Number: ███████████
 Enter OTP: ███████████
 ```  
+
 11. When a Center with more than minimum number of Slots is available, the Program will make a Beep sound - having different frequency for different districts. It will then display the available options as shown in the Screenshot.
 	
 
@@ -206,24 +207,31 @@ Enter OTP: ███████████
 ## Working Screenshots:
 
 1. Generating OTP and Token...
+
 ![SS1](./assets/ss1.png)
 
 2.  Fetching Registered Beneficiaries...
+
 ![SS2](./assets/ss2.png)
 
 3.  Selecting Beneficiaries...
+
 ![SS3](./assets/ss3.png)
 
-4.  Additional Information to be entered as Input...
+4.  Additional Information to be entered for Slot Booking...
+
 ![SS4](./assets/ss4.png)
 
 5.  Auto-Booking Function...
+
 ![SS5](./assets/ss5.png)
 
 6.  Save Information as JSON File...
+
 ![SS6](./assets/ss6.png)
 
 7.  Displaying Available Vaccination Centers and Booking Slots (Auto-Booking ON)...
+
 ![SS7](./assets/ss7.png)
 
 <!-- CONTRIBUTING -->
