@@ -107,20 +107,17 @@ pip install -r requirements.txt
   #    Please do not try to club together booking for Younger and Older Beneficiaries at the same time.
 
   #####################################################################
-	  
-	Enter comma separated index numbers of Beneficiaries to book for : 1
-```
+  Enter comma separated index numbers of Beneficiaries to book for : 1```
 
 
 3. Ensure that the Beneficiaries are getting selected:
-	```
-	Selected Beneficiaries are:  
+```Selected Beneficiaries are:  
 +-------+----------------+---------------+-----------+-------+----------------------+
 |   idx |        bref_id | name          | vaccine   |   age | status               |
 +=======+================+===============+===========+=======+======================+
 |     1 | ██████████████ | █████████████ | ███████   |    ██ | ██████████████       |
 +-------+----------------+---------------+-----------+-------+----------------------+
-	```
+```
 
 4. Selecting the State:
 	```
