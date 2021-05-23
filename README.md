@@ -136,13 +136,13 @@ pip install -r requirements.txt
 	+-------+-----------------------------+  
 	| 37    | West Bengal                 |  
 	+-------+-----------------------------+
-	```
-	```
+```
+```
 	Enter State Index from the Table: 12
-	```
-5. Select the Districts you are interested in. Multiple Districts can be selected by providing comma-separated index values
-	```
-+-------+-------------------------+
+```
+	
+5. Select the Districts you are interested in. Multiple Districts can be selected by providing comma-separated index values...
+```+-------+-------------------------+
 |   idx | district                |
 +=======+=========================+
 |     1 | Ahmedabad               |
@@ -153,22 +153,22 @@ pip install -r requirements.txt
 +-------+-------------------------+
 |    41 | Valsad                  |
 +-------+-------------------------+
-	```
-	```
+```
+```
 	Enter comma separated index numbers of Districts to monitor : 2
-	```
+```
 6. Ensure that the correct Districts are getting selected...
-	```
-  Selected Districts are:
+```
+Selected Districts are:
 +-------+---------------+-----------------------+--------------+
 |   idx |   district_id | district_name         |   alert_freq |
 +=======+===============+=======================+==============+
 |     1 |           770 | Ahmedabad Corporation |          660 |
 +-------+---------------+-----------------------+--------------+
-  ```
+```
 
 7. Additional Information regarding Vaccination Availability, Loading Data, Date etc... to be added by the User. 
-	```
+```
 Filter out Centres with Vaccine availability less than ? Minimum 1 :
 How often do you want to load Data from the Portal (in Seconds)? Default 15. Minimum 5. :
 
@@ -177,22 +177,22 @@ Use 1 for Today, 2 for Tomorrow, or provide a date in the format DD-MM-YYYY. Def
 
 Do you have a Preference for Fee Type?
 Enter 0 for No Preference, 1 for Free Only, or 2 for Paid Only. Default 0 :
-	```
+```
 
 8. Program will now start to monitor the slots in these Districts every 15 seconds.
-	```
-	===================================================================================  
-	Centres are available in Ahmedabad Corporation from 24-05-2021 as of 2021-05-23 09:29:10: 0
-  No Options Available right now. Next Update in 15 seconds..
-	```
+```
+===================================================================================  
+Centres are available in Ahmedabad Corporation from 24-05-2021 as of 2021-05-23 09:29:10: 0
+No Options Available right now. Next Update in 15 seconds..
+```
 
 9. If at any stage your Token becomes invalid, then the Program will make a Beep and Prompt for ```y``` or ```n```. If you would like to continue, provide ```y``` and proceed to allow using same Mobile Number
-	```
+```
 	Token is INVALID! 
-  Do you want to try for a new Token? (y/n Default y): y
+    Do you want to try for a new Token? (y/n Default y): y
 	Enter the Registered Mobile Number: ███████████
 	Enter OTP: ███████████
-	```  
+```  
 11. When a Center with more than minimum number of Slots is available, the Program will make a Beep sound - having different frequency for different districts. It will then display the available options as shown in the Screenshot.
 	
 
