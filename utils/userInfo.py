@@ -199,11 +199,12 @@ def collectUserDetails(request_header):
 
     # Get refresh frequency
     print(f"{Fore.YELLOW}", end="")
+    print("\nHow often do you want to load Data from the Portal (in Seconds)?")
     refresh_freq = input(
-        "How often do you want to load Data from the Portal (in Seconds)? Default 15. Minimum 5. : "
+        "Ideal to have >=30 due to recent changes. Default 30. Minimum 5. : "
     )
     print(f"{Fore.RESET}", end="")
-    refresh_freq = int(refresh_freq) if refresh_freq and int(refresh_freq) >= 5 else 15
+    refresh_freq = int(refresh_freq) if refresh_freq and int(refresh_freq) >= 5 else 30
 
     # Get search start date
     print(f"{Fore.YELLOW}", end="")

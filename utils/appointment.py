@@ -93,7 +93,7 @@ def bookAppointment(request_header, details):
                 beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
                 print(f"{Fore.GREEN}", end="")
                 print(
-                    "##############    BOOKED!  ############################    BOOKED!  ##############"
+                    "\n\n##############    BOOKED!  ############################    BOOKED!  ##############"
                 )
                 print(
                     "                Congratulations! You've Successfully Booked a Slot!                       \n"
