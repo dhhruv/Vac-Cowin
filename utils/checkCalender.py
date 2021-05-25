@@ -84,7 +84,7 @@ def checkCalenderByDistrict(
                 if "centers" in resp:
                     print(f"{Fore.YELLOW}", end="")
                     print(
-                        f"Centres are available in {location['district_name']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
+                        f"Centres available in {location['district_name']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
                     print(f"{Fore.RESET}", end="")
                     options += viableOptions(
@@ -152,7 +152,7 @@ def checkCalenderByPincode(
                 if "centers" in resp:
                     print(f"{Fore.YELLOW}", end="")
                     print(
-                        f"Centres are available in {location['pincode']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
+                        f"Centres available in {location['pincode']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
                     )
                     print(f"{Fore.RESET}", end="")
                     options += viableOptions(

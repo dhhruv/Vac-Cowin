@@ -5,6 +5,7 @@ import argparse
 import copy
 import os
 import sys
+import time
 from types import SimpleNamespace
 
 import requests
@@ -161,12 +162,19 @@ def main():
                 # if token invalid, regenerate OTP and new token
                 beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
                 print(f"{Fore.RED}", end="")
-                print("Token is INVALID!")
+                print("\n\nToken is INVALID!")
                 print(f"{Fore.RESET}", end="")
                 token_valid = False
 
                 print(f"{Fore.YELLOW}", end="")
                 tryOTP = input("Do you want to try for a new Token? (y/n Default y): ")
+                for i in range(10, 0, -1):
+                    print(f"{Fore.RED}", end="")
+                    msg = f"Wait for {i} seconds.."
+                    print(msg, end="\r", flush=True)
+                    print(f"{Fore.RESET}", end="")
+                    sys.stdout.flush()
+                    time.sleep(1)
                 if tryOTP.lower() == "y" or not tryOTP:
                     if not mobile:
                         print(f"{Fore.YELLOW}", end="")
