@@ -161,20 +161,22 @@ def checkAndBook(
         # dose = (2 if any(detail['vaccine'] for detail in collected_details["beneficiary_dtls"]) else 1)
 
         if isinstance(start_date, int) and start_date == 2:
-            start_date = (
-                datetime.datetime.today() + datetime.timedelta(days=1)
-            ).strftime("%d-%m-%Y")
+            start_date = datetime.datetime.today() + datetime.timedelta(days=1)
         elif isinstance(start_date, int) and start_date == 1:
-            start_date = datetime.datetime.today().strftime("%d-%m-%Y")
+            start_date = datetime.datetime.today()
         else:
             pass
+
+        num_days = 7
+        list_format = [start_date + datetime.timedelta(days=i) for i in range(num_days)]
+        actual_dates = [i.strftime("%d-%m-%Y") for i in list_format]
 
         if search_option == 2:
             options = checkCalenderByDistrict(
                 request_header,
                 vaccine_type,
                 location_dtls,
-                start_date,
+                actual_dates,
                 minimum_slots,
                 min_age_booking,
                 fee_type,
@@ -185,7 +187,7 @@ def checkAndBook(
                 request_header,
                 vaccine_type,
                 location_dtls,
-                start_date,
+                actual_dates,
                 minimum_slots,
                 min_age_booking,
                 fee_type,
