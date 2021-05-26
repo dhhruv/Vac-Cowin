@@ -42,7 +42,7 @@ def checkCalenderByDistrict(
     request_header,
     vaccine_type,
     location_dtls,
-    start_date,
+    actual_dates,
     minimum_slots,
     min_age_booking,
     fee_type,
@@ -67,32 +67,34 @@ def checkCalenderByDistrict(
             base_url += f"&vaccine={vaccine_type}"
 
         options = []
-        for location in location_dtls:
-            resp = requests.get(
-                base_url.format(location["district_id"], start_date),
-                headers=request_header,
-            )
 
-            if resp.status_code == 401:
-                print(f"{Fore.RED}", end="")
-                print("TOKEN is INVALID!")
-                print(f"{Fore.RESET}", end="")
-                return False
+        for actual_date in actual_dates:
+            for location in location_dtls:
+                resp = requests.get(
+                    base_url.format(location["district_id"], actual_date),
+                    headers=request_header,
+                )
 
-            elif resp.status_code == 200:
-                resp = resp.json()
-                if "centers" in resp:
-                    print(f"{Fore.YELLOW}", end="")
-                    print(
-                        f"Centres available in {location['district_name']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
-                    )
+                if resp.status_code == 401:
+                    print(f"{Fore.RED}", end="")
+                    print("TOKEN is INVALID!")
                     print(f"{Fore.RESET}", end="")
-                    options += viableOptions(
-                        resp, minimum_slots, min_age_booking, fee_type, dose
-                    )
+                    return False
 
-            else:
-                pass
+                elif resp.status_code == 200:
+                    resp = resp.json()
+                    if "centers" in resp:
+                        print(f"{Fore.YELLOW}", end="")
+                        print(
+                            f"Centres available in {location['district_name']} from {actual_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
+                        )
+                        print(f"{Fore.RESET}", end="")
+                        options += viableOptions(
+                            resp, minimum_slots, min_age_booking, fee_type, dose
+                        )
+
+                else:
+                    pass
 
         for location in location_dtls:
             if location["district_name"] in [option["district"] for option in options]:
@@ -111,7 +113,7 @@ def checkCalenderByPincode(
     request_header,
     vaccine_type,
     location_dtls,
-    start_date,
+    actual_dates,
     minimum_slots,
     min_age_booking,
     fee_type,
@@ -136,31 +138,33 @@ def checkCalenderByPincode(
             base_url += f"&vaccine={vaccine_type}"
 
         options = []
-        for location in location_dtls:
-            resp = requests.get(
-                base_url.format(location["pincode"], start_date), headers=request_header
-            )
+        
+        for actual_date in actual_dates:
+            for location in location_dtls:
+                resp = requests.get(
+                    base_url.format(location["pincode"], actual_date), headers=request_header
+                )
 
-            if resp.status_code == 401:
-                print(f"{Fore.RED}", end="")
-                print("TOKEN is INVALID!")
-                print(f"{Fore.RESET}", end="")
-                return False
-
-            elif resp.status_code == 200:
-                resp = resp.json()
-                if "centers" in resp:
-                    print(f"{Fore.YELLOW}", end="")
-                    print(
-                        f"Centres available in {location['pincode']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
-                    )
+                if resp.status_code == 401:
+                    print(f"{Fore.RED}", end="")
+                    print("TOKEN is INVALID!")
                     print(f"{Fore.RESET}", end="")
-                    options += viableOptions(
-                        resp, minimum_slots, min_age_booking, fee_type, dose
-                    )
+                    return False
 
-            else:
-                pass
+                elif resp.status_code == 200:
+                    resp = resp.json()
+                    if "centers" in resp:
+                        print(f"{Fore.YELLOW}", end="")
+                        print(
+                            f"Centres available in {location['pincode']} from {actual_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
+                        )
+                        print(f"{Fore.RESET}", end="")
+                        options += viableOptions(
+                            resp, minimum_slots, min_age_booking, fee_type, dose
+                        )
+
+                else:
+                    pass
 
         for location in location_dtls:
             if int(location["pincode"]) in [option["pincode"] for option in options]:
