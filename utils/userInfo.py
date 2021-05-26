@@ -5,20 +5,16 @@ import sys
 from collections import Counter
 from colorama import Fore, Style, init
 
+from colorama import Fore, Style, init
+
 from utils.displayData import displayInfoDict
 from utils.getData import getBeneficiaries, getDistricts, getPincodes
 from utils.preferences import getFeeTypePreference, getVaccinePreference
-
-BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
-BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
-CALENDAR_URL_DISTRICT = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={0}&date={1}"
-CALENDAR_URL_PINCODE = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByPin?pincode={0}&date={1}"
-CAPTCHA_URL = "https://cdn-api.co-vin.in/api/v2/auth/getRecaptcha"
-OTP_PUBLIC_URL = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"
-OTP_PRO_URL = "https://cdn-api.co-vin.in/api/v2/auth/generateMobileOTP"
+from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
 
+init(convert=True)
 
 try:
     import winsound
@@ -46,33 +42,42 @@ else:
 
 
 def confirmAndProceed(collected_details):
+    print(f"{Fore.RESET}", end="")
     print(
         "\n================================= Confirm the Information =================================\n"
     )
     displayInfoDict(collected_details)
 
+    print(f"{Fore.YELLOW}", end="")
     confirm = input("\nProceed with the above Information (y/n Default y) : ")
+    print(f"{Fore.RESET}", end="")
     confirm = confirm if confirm else "y"
     if confirm != "y":
+        print(f"{Fore.RED}", end="")
         print("Details not Confirmed. Exiting the Process.")
         print("Please Wait...")
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         sys.exit()
 
 
 def saveUserInfo(filename, details):
+    print(f"{Fore.RESET}", end="")
     print(
         "\n================================= Save Information =================================\n"
     )
+    print(f"{Fore.YELLOW}", end="")
     save_info = input(
         "Would you like to save this Session's Data as a JSON File for easy use the next time?: (y/n Default y): "
     )
+    print(f"{Fore.RESET}", end="")
     save_info = save_info if save_info else "y"
     if save_info == "y":
         with open(filename, "w") as f:
-            json.dump(details, f)
-
+            json.dump(details, f, sort_keys=True, indent=4)
+        print(f"{Fore.GREEN}", end="")
         print(f"Information saved to {filename} in {os.getcwd()}")
+        print(f"{Fore.RESET}", end="")
 
 
 def getSavedUserInfo(filename):
@@ -90,10 +95,12 @@ def collectUserDetails(request_header):
     beneficiary_dtls = getBeneficiaries(request_header)
 
     if len(beneficiary_dtls) == 0:
+        print(f"{Fore.RED}", end="")
         print("There should be at least one Beneficiary.")
         print("Please Login to the CoWIN Portal to Add a Beneficiary.")
         print("Exiting")
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         sys.exit(1)
 
     # Make sure all beneficiaries have the same type of vaccine
@@ -117,7 +124,9 @@ def collectUserDetails(request_header):
     if len(vaccines) > 1 and ("" in vaccines):
         vaccines.remove("")
         vaccine_types.remove("")
-        print(f"{Fore.RED}", end="")
+
+        print(f"{Fore.CYAN}", end="")
+
         print(
             "\n================================= Important =================================\n"
         )
@@ -156,7 +165,7 @@ def collectUserDetails(request_header):
     # get search method to use
     print(f"{Fore.YELLOW}", end="")
     search_option = input(
-        """Search by Pincode? OR by State & District? \nEnter 1 for Pincode or 2 for State & District. (Default 2) : """
+        """\nSearch by Pincode? OR by State & District? \nEnter 1 for Pincode or 2 for State & District. (Default 2) : """
     )
     print(f"{Fore.RESET}", end="")
 
@@ -180,7 +189,7 @@ def collectUserDetails(request_header):
     # Set filter condition
     print(f"{Fore.YELLOW}", end="")
     minimum_slots = input(
-        f"Filter out Centres with Vaccine availability less than ? Minimum {len(beneficiary_dtls)} : "
+        f"\nFilter out Centres with Vaccine availability less than ? Minimum {len(beneficiary_dtls)} : "
     )
     print(f"{Fore.RESET}", end="")
     if minimum_slots:
@@ -194,11 +203,15 @@ def collectUserDetails(request_header):
 
     # Get refresh frequency
     print(f"{Fore.YELLOW}", end="")
+
+    print("\nHow often do you want to load Data from the Portal (in Seconds)?")
+
     refresh_freq = input(
-        "How often do you want to load Data from the Portal (in Seconds)? Default 15. Minimum 5. : "
+        "Ideal to have >=30 due to recent changes. Default 30. Minimum 5. : "
     )
     print(f"{Fore.RESET}", end="")
-    refresh_freq = int(refresh_freq) if refresh_freq and int(refresh_freq) >= 5 else 15
+
+    refresh_freq = int(refresh_freq) if refresh_freq and int(refresh_freq) >= 5 else 30
 
        #Checking if partially vaccinated and thereby checking the the due date for dose2
     if all([beneficiary['status'] == 'Partially Vaccinated' for beneficiary in beneficiary_dtls]):
@@ -235,10 +248,10 @@ def collectUserDetails(request_header):
         # Get search start date
         print(f"{Fore.YELLOW}", end="")
         start_date = input(
-                "\nSearch for next seven day starting from when?\nUse 1 for today, 2 for tomorrow, or provide a date in the format dd-mm-yyyy. Default 2: "
-            )
+        "\nSearch for next seven day starting from when? \nUse 1 for Today, 2 for Tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: ")
         print(f"{Fore.RESET}", end="")
         if not start_date:
+
             start_date = 2
         elif start_date in ["1", "2"]:
             start_date = int(start_date)
@@ -247,7 +260,9 @@ def collectUserDetails(request_header):
                 datetime.datetime.strptime(start_date, "%d-%m-%Y")
             except ValueError:
                 start_date = 2
-                print('Invalid Date! Proceeding with tomorrow.')
+                print(f"{Fore.CYAN}", end="")
+                print("Invalid Date! Proceeding with Tomorrow's Date.")
+                print(f"{Fore.RESET}", end="")
 
     # Get preference of Free/Paid option
     fee_type = getFeeTypePreference()

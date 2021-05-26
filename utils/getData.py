@@ -6,16 +6,11 @@ import requests
 from colorama import Fore, Style, init
 
 from utils.displayData import displayTable
-
-BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
-BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
-CALENDAR_URL_DISTRICT = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={0}&date={1}"
-CALENDAR_URL_PINCODE = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByPin?pincode={0}&date={1}"
-CAPTCHA_URL = "https://cdn-api.co-vin.in/api/v2/auth/getRecaptcha"
-OTP_PUBLIC_URL = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"
-OTP_PRO_URL = "https://cdn-api.co-vin.in/api/v2/auth/generateMobileOTP"
+from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
+
+init(convert=True)
 
 
 try:
@@ -45,7 +40,9 @@ else:
 
 def getPincodes():
     locations = []
+    print(f"{Fore.YELLOW}", end="")
     pincodes = input("Enter comma separated Pincodes to monitor (Priority wise): ")
+    print(f"{Fore.RESET}", end="")
     for idx, pincode in enumerate(pincodes.split(",")):
         pincode = {"pincode": pincode, "alert_freq": 440 + ((2 * idx) * 110)}
         locations.append(pincode)
@@ -72,7 +69,9 @@ def getDistricts(request_header):
             refined_states.append(tmp)
 
         displayTable(refined_states)
+        print(f"{Fore.YELLOW}", end="")
         state = int(input("\nEnter State Index from the Table: "))
+        print(f"{Fore.RESET}", end="")
         state_id = states[state - 1]["state_id"]
 
         districts = requests.get(
@@ -89,9 +88,11 @@ def getDistricts(request_header):
                 refined_districts.append(tmp)
 
             displayTable(refined_districts)
+            print(f"{Fore.YELLOW}", end="")
             reqd_districts = input(
                 "\nEnter comma separated index numbers of Districts to monitor : "
             )
+            print(f"{Fore.RESET}", end="")
             districts_idx = [int(idx) - 1 for idx in reqd_districts.split(",")]
             reqd_districts = [
                 {
@@ -103,22 +104,28 @@ def getDistricts(request_header):
                 if idx in districts_idx
             ]
 
+            print(f"{Fore.CYAN}", end="")
             print(f"Selected Districts are: ")
+            print(f"{Fore.RESET}", end="")
             displayTable(reqd_districts)
             return reqd_districts
 
         else:
+            print(f"{Fore.RED}", end="")
             print("Unable to fetch the Districts...")
             print(districts.status_code)
             print(districts.text)
             os.system("pause")
+            print(f"{Fore.RESET}", end="")
             sys.exit(1)
 
     else:
+        print(f"{Fore.RED}", end="")
         print("Unable to fetch the States...")
         print(states.status_code)
         print(states.text)
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
         sys.exit(1)
 
 def getDose2DueDate(vaccine_type):
@@ -179,23 +186,25 @@ def getBeneficiaries(request_header):
             if vaccinated:
                 tmp["due_date"]=beneficiary["dose2_due_date"]
             refined_beneficiaries.append(tmp)
-        
+
         print(f"{Fore.RESET}", end="")
         displayTable(refined_beneficiaries)
         #print(refined_beneficiaries)
         print(
             """
-        ################# IMPORTANT NOTES #################
-        # 1. While selecting beneficiaries, make sure that selected beneficiaries are all taking the same dose: either first OR second.
-        #    Please do no try to club together booking for first dose for one beneficiary and second dose for another beneficiary.
-        #
-        # 2. While selecting beneficiaries, also make sure that beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN.
-        #    Please do no try to club together booking for beneficiary taking COVISHIELD with beneficiary taking COVAXIN.
-        #
-        # 3. If you're selecting multiple beneficiaries, make sure all are of the same age group (45+ or 18+) as defined by the govt.
-        #    Please do not try to club together booking for younger and older beneficiaries.
-        ###################################################
-        """
+
+        ################# IMPORTANT THINGS TO BE REMEMBERED #################\n
+        # 1. While selecting Beneficiaries, make sure that selected Beneficiaries are all taking the same dose: either their First OR Second.
+        #    Please do no try to club together booking for first dose for one Beneficiary and second dose for another Beneficiary. Recommended to do both seperately.
+        
+        # 2. While selecting Beneficiaries, also make sure that Beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN OR SPUTNIK V.
+        #    Please do no try to club together booking for Beneficiary taking COVISHIELD with Beneficiary taking COVAXIN and other possibilities.
+        
+        # 3. If you're selecting multiple Beneficiaries, make sure all are of the same Age Group (45+ or 18+) as defined by the Government.
+        #    Please do not try to club together booking for Younger and Older Beneficiaries at the same time.\n
+        #####################################################################
+        \n"""
+
         )
         print(f"{Fore.YELLOW}", end="")
         reqd_beneficiaries = input(
@@ -217,6 +226,7 @@ def getBeneficiaries(request_header):
             if idx in beneficiary_idx
         ]
 
+
         for beneficiary in reqd_beneficiaries:
                 if beneficiary["status"]=="Partially Vaccinated":
                     days_remaining=getDose2DueDate(beneficiary["vaccine"])
@@ -225,6 +235,7 @@ def getBeneficiaries(request_header):
                     dose2DueDate=dose1_date+datetime.timedelta(days=days_remaining)
                     beneficiary["dose2_due_date"]=dose2DueDate.strftime("%d-%m-%Y")
         
+
         print(f"{Fore.CYAN}", end="")
         print(f"Selected Beneficiaries are: ")
         print(f"{Fore.RESET}", end="")
@@ -233,7 +244,9 @@ def getBeneficiaries(request_header):
 
     else:
         print(f"{Fore.RED}", end="")
-        print("Unable to fetch beneficiaries")
+
+        print("Unable to Fetch Beneficiaries...")
+
         print(beneficiaries.status_code)
         print(beneficiaries.text)
         os.system("pause")

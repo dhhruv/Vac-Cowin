@@ -1,16 +1,13 @@
 import os
 import sys
 
-BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
-BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
-CALENDAR_URL_DISTRICT = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={0}&date={1}"
-CALENDAR_URL_PINCODE = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByPin?pincode={0}&date={1}"
-CAPTCHA_URL = "https://cdn-api.co-vin.in/api/v2/auth/getRecaptcha"
-OTP_PUBLIC_URL = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"
-OTP_PRO_URL = "https://cdn-api.co-vin.in/api/v2/auth/generateMobileOTP"
+from colorama import Fore, Style, init
+
+from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
 
+init(convert=True)
 
 try:
     import winsound
@@ -38,12 +35,15 @@ else:
 
 
 def getVaccinePreference():
+    print(f"{Fore.YELLOW}", end="")
     print(
-        "It seems that you're trying to find a Slot for your First Dose. Do you have a Preference for Vaccine Type?"
+        "\nIt seems that you're trying to find a Slot for your First Dose. Do you have a Preference for Vaccine Type?\n"
     )
+    print(f"{Fore.YELLOW}", end="")
     preference = input(
         "Enter 0 for No Preference, 1 for COVISHIELD, 2 for COVAXIN, or 3 for SPUTNIK V. Default 0 : "
     )
+    print(f"{Fore.RESET}", end="")
     preference = (
         int(preference) if preference and int(preference) in [0, 1, 2, 3] else 0
     )
@@ -59,10 +59,12 @@ def getVaccinePreference():
 
 
 def getFeeTypePreference():
+    print(f"{Fore.YELLOW}", end="")
     print("\nDo you have a Preference for Fee Type?")
     preference = input(
         "Enter 0 for No Preference, 1 for Free Only, or 2 for Paid Only. Default 0 : "
     )
+    print(f"{Fore.RESET}", end="")
     preference = int(preference) if preference and int(preference) in [0, 1, 2] else 0
 
     if preference == 1:

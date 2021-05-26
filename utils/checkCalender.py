@@ -3,18 +3,14 @@ import os
 import sys
 
 import requests
+from colorama import Fore, Style, init
 
 from utils.displayData import viableOptions
-
-BOOKING_URL = "https://cdn-api.co-vin.in/api/v2/appointment/schedule"
-BENEFICIARIES_URL = "https://cdn-api.co-vin.in/api/v2/appointment/beneficiaries"
-CALENDAR_URL_DISTRICT = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id={0}&date={1}"
-CALENDAR_URL_PINCODE = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByPin?pincode={0}&date={1}"
-CAPTCHA_URL = "https://cdn-api.co-vin.in/api/v2/auth/getRecaptcha"
-OTP_PUBLIC_URL = "https://cdn-api.co-vin.in/api/v2/auth/public/generateOTP"
-OTP_PRO_URL = "https://cdn-api.co-vin.in/api/v2/auth/generateMobileOTP"
+from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
+
+init(convert=True)
 
 
 try:
@@ -46,7 +42,7 @@ def checkCalenderByDistrict(
     request_header,
     vaccine_type,
     location_dtls,
-    start_date,
+    actual_dates,
     minimum_slots,
     min_age_booking,
     fee_type,
@@ -60,6 +56,7 @@ def checkCalenderByDistrict(
         4. Returns list of vaccination centers & slots if available
     """
     try:
+        print(f"{Fore.RESET}", end="")
         print(
             "==================================================================================="
         )
@@ -70,28 +67,34 @@ def checkCalenderByDistrict(
             base_url += f"&vaccine={vaccine_type}"
 
         options = []
-        for location in location_dtls:
-            resp = requests.get(
-                base_url.format(location["district_id"], start_date),
-                headers=request_header,
-            )
 
-            if resp.status_code == 401:
-                print("TOKEN is INVALID!")
-                return False
+        for actual_date in actual_dates:
+            for location in location_dtls:
+                resp = requests.get(
+                    base_url.format(location["district_id"], actual_date),
+                    headers=request_header,
+                )
 
-            elif resp.status_code == 200:
-                resp = resp.json()
-                if "centers" in resp:
-                    print(
-                        f"Centres are available in {location['district_name']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
-                    )
-                    options += viableOptions(
-                        resp, minimum_slots, min_age_booking, fee_type, dose
-                    )
+                if resp.status_code == 401:
+                    print(f"{Fore.RED}", end="")
+                    print("TOKEN is INVALID!")
+                    print(f"{Fore.RESET}", end="")
+                    return False
 
-            else:
-                pass
+                elif resp.status_code == 200:
+                    resp = resp.json()
+                    if "centers" in resp:
+                        print(f"{Fore.YELLOW}", end="")
+                        print(
+                            f"Centres available in {location['district_name']} from {actual_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
+                        )
+                        print(f"{Fore.RESET}", end="")
+                        options += viableOptions(
+                            resp, minimum_slots, min_age_booking, fee_type, dose
+                        )
+
+                else:
+                    pass
 
         for location in location_dtls:
             if location["district_name"] in [option["district"] for option in options]:
@@ -100,7 +103,9 @@ def checkCalenderByDistrict(
         return options
 
     except Exception as e:
+        print(f"{Fore.RED}", end="")
         print(str(e))
+        print(f"{Fore.RESET}", end="")
         beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
 
 
@@ -108,7 +113,7 @@ def checkCalenderByPincode(
     request_header,
     vaccine_type,
     location_dtls,
-    start_date,
+    actual_dates,
     minimum_slots,
     min_age_booking,
     fee_type,
@@ -122,6 +127,7 @@ def checkCalenderByPincode(
         4. Returns list of vaccination centers & slots if available
     """
     try:
+        print(f"{Fore.RESET}", end="")
         print(
             "==================================================================================="
         )
@@ -132,27 +138,33 @@ def checkCalenderByPincode(
             base_url += f"&vaccine={vaccine_type}"
 
         options = []
-        for location in location_dtls:
-            resp = requests.get(
-                base_url.format(location["pincode"], start_date), headers=request_header
-            )
+        
+        for actual_date in actual_dates:
+            for location in location_dtls:
+                resp = requests.get(
+                    base_url.format(location["pincode"], actual_date), headers=request_header
+                )
 
-            if resp.status_code == 401:
-                print("TOKEN is INVALID!")
-                return False
+                if resp.status_code == 401:
+                    print(f"{Fore.RED}", end="")
+                    print("TOKEN is INVALID!")
+                    print(f"{Fore.RESET}", end="")
+                    return False
 
-            elif resp.status_code == 200:
-                resp = resp.json()
-                if "centers" in resp:
-                    print(
-                        f"Centres are available in {location['pincode']} from {start_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
-                    )
-                    options += viableOptions(
-                        resp, minimum_slots, min_age_booking, fee_type, dose
-                    )
+                elif resp.status_code == 200:
+                    resp = resp.json()
+                    if "centers" in resp:
+                        print(f"{Fore.YELLOW}", end="")
+                        print(
+                            f"Centres available in {location['pincode']} from {actual_date} as of {today.strftime('%Y-%m-%d %H:%M:%S')}: {len(resp['centers'])}"
+                        )
+                        print(f"{Fore.RESET}", end="")
+                        options += viableOptions(
+                            resp, minimum_slots, min_age_booking, fee_type, dose
+                        )
 
-            else:
-                pass
+                else:
+                    pass
 
         for location in location_dtls:
             if int(location["pincode"]) in [option["pincode"] for option in options]:
@@ -162,5 +174,7 @@ def checkCalenderByPincode(
         return options
 
     except Exception as e:
+        print(f"{Fore.RED}", end="")
         print(str(e))
+        print(f"{Fore.RESET}", end="")
         beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
