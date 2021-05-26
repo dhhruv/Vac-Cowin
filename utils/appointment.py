@@ -167,9 +167,9 @@ def checkAndBook(
         else:
             pass
 
-        #num_days = 7
-        #list_format = [start_date + datetime.timedelta(days=i) for i in range(num_days)]
-        #actual_dates = [i.strftime("%d-%m-%Y") for i in list_format]
+        # num_days = 7
+        # list_format = [start_date + datetime.timedelta(days=i) for i in range(num_days)]
+        # actual_dates = [i.strftime("%d-%m-%Y") for i in list_format]
 
         if search_option == 2:
             options = checkCalenderByDistrict(

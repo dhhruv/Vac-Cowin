@@ -68,7 +68,6 @@ def checkCalenderByDistrict(
 
         options = []
 
-
         for location in location_dtls:
             resp = requests.get(
                 base_url.format(location["district_id"], start_date),
@@ -139,7 +138,6 @@ def checkCalenderByPincode(
 
         options = []
 
-        
         for location in location_dtls:
             resp = requests.get(
                 base_url.format(location["pincode"], start_date),
