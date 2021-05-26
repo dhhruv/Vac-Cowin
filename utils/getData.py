@@ -128,23 +128,25 @@ def getDistricts(request_header):
         print(f"{Fore.RESET}", end="")
         sys.exit(1)
 
+
 def getDose2DueDate(vaccine_type):
     """
     This function
         1.Checks the vaccine type
         2.Returns the appropriate due date for the vaccine type
     """
-    covishield_due_date=84
-    covaxin_due_date=28
-    sputnikV_due_date=21
-    
-    if vaccine_type=="COVISHIELD":
+    covishield_due_date = 84
+    covaxin_due_date = 28
+    sputnikV_due_date = 21
+
+    if vaccine_type == "COVISHIELD":
         return covishield_due_date
-    elif vaccine_type=="COVAXIN":
+    elif vaccine_type == "COVAXIN":
         return covaxin_due_date
-    elif vaccine_type=="SPUTNIK V":
+    elif vaccine_type == "SPUTNIK V":
         return sputnikV_due_date
-        
+
+
 def getBeneficiaries(request_header):
     """
     This function
@@ -154,26 +156,29 @@ def getBeneficiaries(request_header):
     """
     beneficiaries = requests.get(BENEFICIARIES_URL, headers=request_header)
 
-    vaccinated=False
+    vaccinated = False
 
     if beneficiaries.status_code == 200:
         beneficiaries = beneficiaries.json()["beneficiaries"]
-        
 
         refined_beneficiaries = []
         for beneficiary in beneficiaries:
             beneficiary["age"] = datetime.datetime.today().year - int(
                 beneficiary["birth_year"]
             )
-            if beneficiary["vaccination_status"]=="Partially Vaccinated":
-                vaccinated=True
-                days_remaining=getDose2DueDate(beneficiary["vaccine"])
-                               
-                dose1_date=datetime.datetime.strptime(beneficiary["dose1_date"], "%d-%m-%Y")
-                beneficiary["dose2_due_date"]=dose1_date+datetime.timedelta(days=days_remaining)
+            if beneficiary["vaccination_status"] == "Partially Vaccinated":
+                vaccinated = True
+                days_remaining = getDose2DueDate(beneficiary["vaccine"])
+
+                dose1_date = datetime.datetime.strptime(
+                    beneficiary["dose1_date"], "%d-%m-%Y"
+                )
+                beneficiary["dose2_due_date"] = dose1_date + datetime.timedelta(
+                    days=days_remaining
+                )
             else:
-                vaccinated=False
-                #print(beneficiary_2)
+                vaccinated = False
+                # print(beneficiary_2)
 
             tmp = {
                 "bref_id": beneficiary["beneficiary_reference_id"],
@@ -181,15 +186,15 @@ def getBeneficiaries(request_header):
                 "vaccine": beneficiary["vaccine"],
                 "age": beneficiary["age"],
                 "status": beneficiary["vaccination_status"],
-                "dose1_date":beneficiary["dose1_date"]
+                "dose1_date": beneficiary["dose1_date"],
             }
             if vaccinated:
-                tmp["due_date"]=beneficiary["dose2_due_date"]
+                tmp["due_date"] = beneficiary["dose2_due_date"]
             refined_beneficiaries.append(tmp)
 
         print(f"{Fore.RESET}", end="")
         displayTable(refined_beneficiaries)
-        #print(refined_beneficiaries)
+        # print(refined_beneficiaries)
         print(
             """
 
@@ -204,7 +209,6 @@ def getBeneficiaries(request_header):
         #    Please do not try to club together booking for Younger and Older Beneficiaries at the same time.\n
         #####################################################################
         \n"""
-
         )
         print(f"{Fore.YELLOW}", end="")
         reqd_beneficiaries = input(
@@ -219,22 +223,21 @@ def getBeneficiaries(request_header):
                 "vaccine": item["vaccine"],
                 "age": item["age"],
                 "status": item["vaccination_status"],
-                "dose1_date":item["dose1_date"]
+                "dose1_date": item["dose1_date"],
             }
-                                
             for idx, item in enumerate(beneficiaries)
             if idx in beneficiary_idx
         ]
 
-
         for beneficiary in reqd_beneficiaries:
-                if beneficiary["status"]=="Partially Vaccinated":
-                    days_remaining=getDose2DueDate(beneficiary["vaccine"])
-                        
-                    dose1_date=datetime.datetime.strptime(beneficiary["dose1_date"], "%d-%m-%Y")
-                    dose2DueDate=dose1_date+datetime.timedelta(days=days_remaining)
-                    beneficiary["dose2_due_date"]=dose2DueDate.strftime("%d-%m-%Y")
-        
+            if beneficiary["status"] == "Partially Vaccinated":
+                days_remaining = getDose2DueDate(beneficiary["vaccine"])
+
+                dose1_date = datetime.datetime.strptime(
+                    beneficiary["dose1_date"], "%d-%m-%Y"
+                )
+                dose2DueDate = dose1_date + datetime.timedelta(days=days_remaining)
+                beneficiary["dose2_due_date"] = dose2DueDate.strftime("%d-%m-%Y")
 
         print(f"{Fore.CYAN}", end="")
         print(f"Selected Beneficiaries are: ")

@@ -138,11 +138,12 @@ def checkCalenderByPincode(
             base_url += f"&vaccine={vaccine_type}"
 
         options = []
-        
+
         for actual_date in actual_dates:
             for location in location_dtls:
                 resp = requests.get(
-                    base_url.format(location["pincode"], actual_date), headers=request_header
+                    base_url.format(location["pincode"], actual_date),
+                    headers=request_header,
                 )
 
                 if resp.status_code == 401:

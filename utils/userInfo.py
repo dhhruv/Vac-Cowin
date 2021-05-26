@@ -3,7 +3,6 @@ import json
 import os
 import sys
 from collections import Counter
-from colorama import Fore, Style, init
 
 from colorama import Fore, Style, init
 
@@ -204,7 +203,7 @@ def collectUserDetails(request_header):
     # Get refresh frequency
     print(f"{Fore.YELLOW}", end="")
 
-    print("\nHow often do you want to load Data from the Portal (in Seconds)?")
+    print("\nHow often do you want to Fetch Data from the Portal (in Seconds)?")
 
     refresh_freq = input(
         "Ideal to have >=30 due to recent changes. Default 30. Minimum 5. : "
@@ -213,42 +212,51 @@ def collectUserDetails(request_header):
 
     refresh_freq = int(refresh_freq) if refresh_freq and int(refresh_freq) >= 5 else 30
 
-       #Checking if partially vaccinated and thereby checking the the due date for dose2
-    if all([beneficiary['status'] == 'Partially Vaccinated' for beneficiary in beneficiary_dtls]):
-        today=datetime.datetime.today()
-        today=today.strftime("%d-%m-%Y")
+    # Checking if partially vaccinated and thereby checking the the due date for dose2
+    if all(
+        [
+            beneficiary["status"] == "Partially Vaccinated"
+            for beneficiary in beneficiary_dtls
+        ]
+    ):
+        today = datetime.datetime.today()
+        today = today.strftime("%d-%m-%Y")
         due_date = [beneficiary["dose2_due_date"] for beneficiary in beneficiary_dtls]
-        dates=Counter(due_date)
+        dates = Counter(due_date)
         if len(dates.keys()) != 1:
             print(f"{Fore.RED}", end="")
             print(
-                f"All beneficiaries in one attempt should have the same due date. Found {len(dates.keys())}"
+                f"All Beneficiaries should have the same Due Date in one attempt. Found {len(dates.keys())}"
             )
             print(f"{Fore.RESET}", end="")
             os.system("pause")
             sys.exit(1)
-            
-            
-        if (datetime.datetime.strptime(due_date[0], "%d-%m-%Y")-datetime.datetime.strptime(str(today), "%d-%m-%Y")).days > 0:
+
+        if (
+            datetime.datetime.strptime(due_date[0], "%d-%m-%Y")
+            - datetime.datetime.strptime(str(today), "%d-%m-%Y")
+        ).days > 0:
             print(f"{Fore.RED}", end="")
-            print("\nHaven't reached the due date for your second dose".upper())
+            print("\nYou haven't reached the Due Date for your Second Dose".upper())
             print(f"{Fore.RESET}", end="")
             print(f"{Fore.YELLOW}", end="")
-            search_due_date=input(
-                "\nDo you want to search for the week starting from your due date(y/n) Default n:"
+            search_due_date = input(
+                "\nDo you want to Search for the Week starting from your Due Date(y/n). Default n:"
             )
             print(f"{Fore.RESET}", end="")
-            if search_due_date=="y":
-                
-                start_date=due_date[0]
+            if search_due_date == "y":
+
+                start_date = due_date[0]
             else:
+                print(f"{Fore.RED}", end="")
                 os.system("pause")
                 sys.exit(1)
     else:
         # Get search start date
         print(f"{Fore.YELLOW}", end="")
         start_date = input(
-        "\nSearch for next seven day starting from when? \nUse 1 for Today, 2 for Tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: ")
+            "\nSearch for next seven day starting from when? \nUse 1 for Today, 2 for Tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: "
+        )
         print(f"{Fore.RESET}", end="")
         if not start_date:
 
