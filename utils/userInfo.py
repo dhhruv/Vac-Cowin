@@ -3,6 +3,7 @@ import json
 import os
 import sys
 from collections import Counter
+from colorama import Fore, Style, init
 
 from colorama import Fore, Style, init
 
@@ -123,7 +124,9 @@ def collectUserDetails(request_header):
     if len(vaccines) > 1 and ("" in vaccines):
         vaccines.remove("")
         vaccine_types.remove("")
-        print(f"{Fore.RESET}", end="")
+
+        print(f"{Fore.CYAN}", end="")
+
         print(
             "\n================================= Important =================================\n"
         )
@@ -134,6 +137,7 @@ def collectUserDetails(request_header):
             "Results will be filtered to show only according to the set Vaccine Preference."
         )
         os.system("pause")
+        print(f"{Fore.RESET}", end="")
 
     if len(vaccines) != 1:
         print(f"{Fore.RED}", end="")
@@ -199,31 +203,66 @@ def collectUserDetails(request_header):
 
     # Get refresh frequency
     print(f"{Fore.YELLOW}", end="")
+
     print("\nHow often do you want to load Data from the Portal (in Seconds)?")
+
     refresh_freq = input(
         "Ideal to have >=30 due to recent changes. Default 30. Minimum 5. : "
     )
     print(f"{Fore.RESET}", end="")
+
     refresh_freq = int(refresh_freq) if refresh_freq and int(refresh_freq) >= 5 else 30
 
-    # Get search start date
-    print(f"{Fore.YELLOW}", end="")
-    start_date = input(
-        "\nSearch for next seven day starting from when? \nUse 1 for Today, 2 for Tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: "
-    )
-    print(f"{Fore.RESET}", end="")
-    if not start_date:
-        start_date = 2
-    elif start_date in ["1", "2"]:
-        start_date = int(start_date)
-    else:
-        try:
-            datetime.datetime.strptime(start_date, "%d-%m-%Y")
-        except ValueError:
-            print(f"{Fore.BLUE}", end="")
-            print("Invalid Date! Proceeding with Tomorrow's Date.")
+       #Checking if partially vaccinated and thereby checking the the due date for dose2
+    if all([beneficiary['status'] == 'Partially Vaccinated' for beneficiary in beneficiary_dtls]):
+        today=datetime.datetime.today()
+        today=today.strftime("%d-%m-%Y")
+        due_date = [beneficiary["dose2_due_date"] for beneficiary in beneficiary_dtls]
+        dates=Counter(due_date)
+        if len(dates.keys()) != 1:
+            print(f"{Fore.RED}", end="")
+            print(
+                f"All beneficiaries in one attempt should have the same due date. Found {len(dates.keys())}"
+            )
             print(f"{Fore.RESET}", end="")
+            os.system("pause")
+            sys.exit(1)
+            
+            
+        if (datetime.datetime.strptime(due_date[0], "%d-%m-%Y")-datetime.datetime.strptime(str(today), "%d-%m-%Y")).days > 0:
+            print(f"{Fore.RED}", end="")
+            print("\nHaven't reached the due date for your second dose".upper())
+            print(f"{Fore.RESET}", end="")
+            print(f"{Fore.YELLOW}", end="")
+            search_due_date=input(
+                "\nDo you want to search for the week starting from your due date(y/n) Default n:"
+            )
+            print(f"{Fore.RESET}", end="")
+            if search_due_date=="y":
+                
+                start_date=due_date[0]
+            else:
+                os.system("pause")
+                sys.exit(1)
+    else:
+        # Get search start date
+        print(f"{Fore.YELLOW}", end="")
+        start_date = input(
+        "\nSearch for next seven day starting from when? \nUse 1 for Today, 2 for Tomorrow, or provide a date in the format DD-MM-YYYY. Default 2: ")
+        print(f"{Fore.RESET}", end="")
+        if not start_date:
+
             start_date = 2
+        elif start_date in ["1", "2"]:
+            start_date = int(start_date)
+        else:
+            try:
+                datetime.datetime.strptime(start_date, "%d-%m-%Y")
+            except ValueError:
+                start_date = 2
+                print(f"{Fore.CYAN}", end="")
+                print("Invalid Date! Proceeding with Tomorrow's Date.")
+                print(f"{Fore.RESET}", end="")
 
     # Get preference of Free/Paid option
     fee_type = getFeeTypePreference()
