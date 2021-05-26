@@ -291,6 +291,9 @@ def collectUserDetails(request_header):
     )
     print(f"{Fore.RESET}", end="")
     auto_book = "no" if not auto_book else auto_book
+    
+    captcha_automation = input("Do you want to automate captcha autofill? (y/n) Default n: ")
+    captcha_automation = "n" if not captcha_automation else captcha_automation
 
     collected_details = {
         "beneficiary_dtls": beneficiary_dtls,
@@ -302,6 +305,7 @@ def collectUserDetails(request_header):
         "start_date": start_date,
         "vaccine_type": vaccine_type,
         "fee_type": fee_type,
+        'captcha_automation': captcha_automation,
     }
 
     return collected_details

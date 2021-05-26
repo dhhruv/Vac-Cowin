@@ -9,7 +9,7 @@ import requests
 from colorama import Fore, Style, init
 from inputimeout import TimeoutOccurred, inputimeout
 
-from utils.captcha import captchaBuilder
+from utils.captcha import captchaBuilder,captchaBuilderAuto
 from utils.checkCalender import checkCalenderByDistrict, checkCalenderByPincode
 from utils.displayData import displayTable
 from utils.getData import getMinAge
@@ -44,7 +44,7 @@ else:
         winsound.Beep(freq, duration)
 
 
-def generateCaptcha(request_header):
+def generateCaptcha(request_header,captcha_automation):
     print(f"{Fore.RESET}", end="")
     print(
         "================================= RECIEVING CAPTCHA =================================================="
@@ -54,12 +54,14 @@ def generateCaptcha(request_header):
     print(f"Captcha Response Code: {resp.status_code}")
     print(f"{Fore.RESET}", end="")
 
-    if resp.status_code == 200:
+    if resp.status_code == 200 and captcha_automation == "n":
         # captchaBuilder(resp.json())
         return captchaBuilder(resp.json())
+    elif resp.status_code == 200 and captcha_automation == "y":
+        return captchaBuilderAuto(resp.json())
 
 
-def bookAppointment(request_header, details):
+def bookAppointment(request_header, details,generate_captcha_pref):
     """
     This function
         1. Takes details in json format
@@ -69,7 +71,7 @@ def bookAppointment(request_header, details):
     try:
         valid_captcha = True
         while valid_captcha:
-            captcha = generateCaptcha(request_header)
+            captcha = generateCaptcha(request_header,generate_captcha_pref)
             details["captcha"] = captcha
 
             print(f"{Fore.RESET}", end="")
@@ -146,6 +148,8 @@ def checkAndBook(
         start_date = kwargs["start_date"]
         vaccine_type = kwargs["vaccine_type"]
         fee_type = kwargs["fee_type"]
+        captcha_automation = kwargs['captcha_automation']
+
 
         """ dose = (
             2
@@ -275,7 +279,7 @@ def checkAndBook(
                 print(f"{Fore.GREEN}", end="")
                 print(f"Booking with Information: {new_req}")
                 print(f"{Fore.RESET}", end="")
-                return bookAppointment(request_header, new_req)
+                return bookAppointment(request_header, new_req, captcha_automation)
 
             except IndexError:
                 print(f"{Fore.RED}", end="")
