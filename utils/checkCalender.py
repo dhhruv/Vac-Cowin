@@ -82,9 +82,11 @@ def checkCalenderByDistrict(
 
             elif resp.status_code == 200:
                 resp = resp.json()
-                
-                resp = filterCenterbyAge(resp, min_age_booking) #Filters the centers by age
-                
+
+                resp = filterCenterbyAge(
+                    resp, min_age_booking
+                )  # Filters the centers by age
+
                 if "centers" in resp:
                     print(f"{Fore.YELLOW}", end="")
                     print(
@@ -155,9 +157,11 @@ def checkCalenderByPincode(
 
             elif resp.status_code == 200:
                 resp = resp.json()
-                
-                resp = filterCenterbyAge(resp, min_age_booking) #Filters the centers by age
-                
+
+                resp = filterCenterbyAge(
+                    resp, min_age_booking
+                )  # Filters the centers by age
+
                 if "centers" in resp:
                     print(f"{Fore.YELLOW}", end="")
                     print(
@@ -183,7 +187,8 @@ def checkCalenderByPincode(
         print(str(e))
         print(f"{Fore.RESET}", end="")
         beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
-        
+
+
 def filterCenterbyAge(resp, min_age_booking):
     if min_age_booking >= 45:
         center_age_filter = 45
@@ -193,9 +198,9 @@ def filterCenterbyAge(resp, min_age_booking):
     if "centers" in resp:
         for center in list(resp["centers"]):
             for session in list(center["sessions"]):
-                if session['min_age_limit'] != center_age_filter:
+                if session["min_age_limit"] != center_age_filter:
                     center["sessions"].remove(session)
-                    if (len(center["sessions"]) == 0):
+                    if len(center["sessions"]) == 0:
                         resp["centers"].remove(center)
 
     return resp
