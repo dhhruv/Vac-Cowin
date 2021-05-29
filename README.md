@@ -228,6 +228,25 @@ Enter OTP: ███████████
 
 ![SS8](https://github.com/dhhruv/Vac-Cowin/blob/master/assets/ss8.png)
 
+## Create Executable and distributable package:
+
+Step 1. Install PyInstaller
+
+    `$ pip install pyinstaller`
+
+Step 2. Check Version of PyInstaller
+
+    `$ pyinstaller --version`
+
+###Note: If you've Anaconda installed in your system, then you're probably using conda package manager instead.In that case, run the following commands below, in sequence:
+    `$ conda install -c conda-forge pyinstaller`
+    `$ conda install -c anaconda pywin32`
+
+Step 3: Convert Python Files to Executables
+
+    `$ pyinstaller --onefile <file_name>.py`
+
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
@@ -251,6 +270,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 1.  [Dhruv Panchal](https://github.com/dhhruv)
 2.  [Urveshkumar Patel](https://github.com/urvesh254)
 3.  [Nirja Desai](https://github.com/nirami98)
+4.  [Sachin Kumar](https://github.com/stepin104310)
 
 ### Important:
 
