@@ -1,7 +1,5 @@
-<p align="center">
-  <img src="https://socialify.git.ci/dhhruv/Vac-Cowin/image?description=1&forks=1&language=1&owner=1&pattern=Plus&stargazers=1&theme=Dark">
-  <p align="center">
-    <a href="https://github.com/dhhruv/Vac-Cowin/blob/master/LICENSE">
+
+ 
       <img src="https://img.shields.io/badge/license-MIT-informational">
     </a>
     <a href="https://www.python.org/">
