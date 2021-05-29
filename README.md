@@ -263,4 +263,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - This goes without saying but, once you get your shot, please do help out any people around you who may not have a laptop or the know-how. For instance any sort of domestic help or literally the thousands of people who don't have the knowledge or luxury as we do.
 - **API Details (Do read the first paragraph): https://apisetu.gov.in/public/marketplace/api/cowin/cowin-public-v2**
 
-<p align='center'><b>Made with ❤ by Dhruv Panchal</b></p>
