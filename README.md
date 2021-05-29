@@ -1,12 +1,4 @@
 
- 
-      <img src="https://img.shields.io/badge/license-MIT-informational">
-    </a>
-    <a href="https://www.python.org/">
-    	<img src="https://img.shields.io/badge/python-v3.8-informational">
-    </a>
-  </p>
-</p>
 <p align="center">
 	<img src="http://ForTheBadge.com/images/badges/made-with-python.svg">
 </p>
