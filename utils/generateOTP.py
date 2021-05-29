@@ -6,6 +6,7 @@ from hashlib import sha256
 import requests
 from colorama import Fore, Style, init
 
+from utils.ratelimit import handleRateLimited
 from utils.urls import *
 
 init(convert=True)
@@ -115,6 +116,8 @@ def generateTokenOTP(mobile, request_header):
                 print(f"{Fore.RED}", end="")
                 print("Unable to Generate OTP...")
                 print(txnId.status_code, txnId.text)
+                if txnId.status_code == 403 or txnId.status_code == 429:
+                    handleRateLimited()
                 print(f"{Fore.RESET}", end="")
 
                 print(f"{Fore.YELLOW}", end="")

@@ -6,6 +6,7 @@ import requests
 from colorama import Fore, Style, init
 
 from utils.displayData import viableOptions
+from utils.ratelimit import handleRateLimited
 from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
@@ -74,7 +75,11 @@ def checkCalenderByDistrict(
                 headers=request_header,
             )
 
-            if resp.status_code == 401:
+            if resp.status_code == 403 or resp.status_code == 429:
+                handleRateLimited()
+                return False
+
+            elif resp.status_code == 401:
                 print(f"{Fore.RED}", end="")
                 print("TOKEN is INVALID!")
                 print(f"{Fore.RESET}", end="")
@@ -149,7 +154,11 @@ def checkCalenderByPincode(
                 headers=request_header,
             )
 
-            if resp.status_code == 401:
+            if resp.status_code == 403 or resp.status_code == 429:
+                handleRateLimited()
+                return False
+
+            elif resp.status_code == 401:
                 print(f"{Fore.RED}", end="")
                 print("TOKEN is INVALID!")
                 print(f"{Fore.RESET}", end="")

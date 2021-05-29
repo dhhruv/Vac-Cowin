@@ -13,6 +13,7 @@ from utils.captcha import captchaBuilder
 from utils.checkCalender import checkCalenderByDistrict, checkCalenderByPincode
 from utils.displayData import displayTable
 from utils.getData import getMinAge
+from utils.ratelimit import handleRateLimited
 from utils.urls import *
 
 WARNING_BEEP_DURATION = (1000, 2000)
@@ -83,7 +84,11 @@ def bookAppointment(request_header, details):
             print(f"Booking Response : {resp.text}")
             print(f"{Fore.RESET}", end="")
 
-            if resp.status_code == 401:
+            if resp.status_code == 403 or resp.status_code == 429:
+                handleRateLimited()
+                return False
+
+            elif resp.status_code == 401:
                 print(f"{Fore.RED}", end="")
                 print("TOKEN is INVALID!")
                 print(f"{Fore.RESET}", end="")
