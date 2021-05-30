@@ -90,7 +90,7 @@ def startDateSearch():
     # Get search start date
     print(f"{Fore.YELLOW}", end="")
     start_date = input(
-        "\nSearch for next seven day starting from when?\nUse 1 for today, 2 for tomorrow, or provide a date in the format dd-mm-yyyy. Default 2: "
+        "\nSearch for next Seven Days starting from when?\nUse 1 for Today, 2 for Tomorrow, or provide a date in the format dd-mm-yyyy. Default 2: "
     )
     print(f"{Fore.RESET}", end="")
     if not start_date:

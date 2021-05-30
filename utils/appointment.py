@@ -166,9 +166,11 @@ def checkAndBook(
         # dose = (2 if any(detail['vaccine'] for detail in collected_details["beneficiary_dtls"]) else 1)
 
         if isinstance(start_date, int) and start_date == 2:
-            start_date = datetime.datetime.today() + datetime.timedelta(days=1)
+            start_date = (
+                datetime.datetime.today() + datetime.timedelta(days=1)
+            ).strftime("%d-%m-%Y")
         elif isinstance(start_date, int) and start_date == 1:
-            start_date = datetime.datetime.today()
+            start_date = datetime.datetime.today().strftime("%d-%m-%Y")
         else:
             pass
 
