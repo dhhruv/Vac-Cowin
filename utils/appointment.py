@@ -111,14 +111,16 @@ def bookAppointment(request_header, details):
                 try:
                     appSlipBase = (
                         APPOINTMENT_SLIP_URL
-                        + f"&appointment_id={resp.json()['appointment_id']}"
+                        + f"&appointment_id={resp.json()['appointment_confirmation_no']}"
                     )
                     appslip = requests.get(appSlipBase, headers=request_header)
                     with open(
-                        f"{resp.json()['appointment_id']}.pdf", "wb"
+                        f"{resp.json()['appointment_confirmation_no']}.pdf", "wb"
                     ) as appSlipPdf:
                         appSlipPdf.write(appslip.content)
-                    if os.path.exists(f"{resp.json()['appointment_id']}.pdf"):
+                    if os.path.exists(
+                        f"{resp.json()['appointment_confirmation_no']}.pdf"
+                    ):
                         print(
                             "\nDownload Successful. Check the Current Working Directory for the Appointment Slip."
                         )
