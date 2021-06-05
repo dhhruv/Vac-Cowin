@@ -1,6 +1,7 @@
 import copy
 import datetime
 import os
+import os.path
 import random
 import sys
 import time
@@ -104,6 +105,9 @@ def bookAppointment(request_header, details):
                     "                Congratulations! You've Successfully Booked a Slot!                       \n"
                 )
 
+                print(
+                    "\n\nDownloading Appointment Slip to the Current Working Directory..."
+                )
                 try:
                     appSlipBase = (
                         APPOINTMENT_SLIP_URL
@@ -114,10 +118,22 @@ def bookAppointment(request_header, details):
                         f"{resp.json()['appointment_id']}.pdf", "wb"
                     ) as appSlipPdf:
                         appSlipPdf.write(appslip.content)
+                    if os.path.exists(f"{resp.json()['appointment_id']}.pdf"):
+                        print(
+                            "\nDownload Successful. Check the Current Working Directory for the Appointment Slip."
+                        )
+                    else:
+                        print(f"{Fore.RED}", end="")
+                        print("\nAppointment Slip Download Failed...")
 
                 except Exception as e:
-                    pass
+                    print(f"{Fore.RED}", end="")
+                    print(str(e))
+                    print(f"{Fore.RESET}", end="")
+                    print("\n\n")
+                    beep(WARNING_BEEP_DURATION[0], WARNING_BEEP_DURATION[1])
 
+                print(f"{Fore.GREEN}", end="")
                 print("\nPress any key thrice to Exit the Program.")
                 os.system("pause")
                 os.system("pause")
