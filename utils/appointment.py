@@ -111,7 +111,7 @@ def bookAppointment(request_header, details):
                 try:
                     appSlipBase = (
                         APPOINTMENT_SLIP_URL
-                        + f"&appointment_id={resp.json()['appointment_confirmation_no']}"
+                        + f"?appointment_id={resp.json()['appointment_confirmation_no']}"
                     )
                     appslip = requests.get(appSlipBase, headers=request_header)
                     with open(
