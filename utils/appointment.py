@@ -70,8 +70,8 @@ def bookAppointment(request_header, details):
     try:
         valid_captcha = True
         while valid_captcha:
-            captcha = generateCaptcha(request_header)
-            details["captcha"] = captcha
+            # captcha = generateCaptcha(request_header)
+            # details["captcha"] = captcha
 
             print(f"{Fore.RESET}", end="")
             print(
