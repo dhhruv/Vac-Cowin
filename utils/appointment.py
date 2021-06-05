@@ -104,6 +104,20 @@ def bookAppointment(request_header, details):
                     "                Congratulations! You've Successfully Booked a Slot!                       \n"
                 )
 
+                try:
+                    appSlipBase = (
+                        APPOINTMENT_SLIP_URL
+                        + f"&appointment_id={resp.json()['appointment_id']}"
+                    )
+                    appslip = requests.get(appSlipBase, headers=request_header)
+                    with open(
+                        f"{resp.json()['appointment_id']}.pdf", "wb"
+                    ) as appSlipPdf:
+                        appSlipPdf.write(appslip.content)
+
+                except Exception as e:
+                    pass
+
                 print("\nPress any key thrice to Exit the Program.")
                 os.system("pause")
                 os.system("pause")
