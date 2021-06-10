@@ -108,6 +108,7 @@ def bookAppointment(request_header, details):
                 print(
                     "\n\nDownloading Appointment Slip to the Current Working Directory..."
                 )
+
                 try:
                     appSlipBase = (
                         APPOINTMENT_SLIP_URL
