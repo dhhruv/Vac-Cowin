@@ -18,6 +18,10 @@
     </a>
 </p>
 
+### DISCLAIMER
+
+**DUE TO LATEST CHANGES IN THE API ACCESS POLICY BY [MoHFW](https://www.mohfw.gov.in/pdf/CoWINAPIGuidelinesFinal240521.pdf), THERE WILL BE NO MORE COMMITS/CONTRIBUTIONS/RELEASES/MAINTENANCE IN THE PROJECT. THE PROJECT HAS BEEN PUT ON INDEFINITE HOLD. GRATEFUL TO EVERY CONTRIBUTORS, SUPPORTERS, USERS THAT WE COULD HELP YOU IN THE CRISIS. EVEN THOUGH YOU MAY STILL USE THE APP AFTER GOING THROUGH THE [T&C](https://www.cowin.gov.in/terms-condition), WE ADVISE NOT TO MISUSE IT, OTHERWISE YOU MIGHT FACE LEGAL ISSUES. USE IT AT YOUR OWN RISK.**
+
 ## Table of Contents:
 
  <ol>
@@ -265,12 +269,14 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ### Important:
 
 - This is a Proof of Concept Project. **I OR the Team** do NOT endorse or condone, in any shape or form, automating any monitoring/booking tasks. **It's only made for Educational Purposes. Use this at your own risk.**
+- **FURTHER, ANY USE OF THE SCRIPT FOR MONETARY, UNETHICAL, OR ILLEGAL PURPOSES IS NOT PERMITTED. - IN CASE, YOU ARE FOUND TO DO THE SAME, YOU SHALL BE SOLELY LIABLE FOR THE CONSEQUENCES. THE DEVELOPER SHALL AND CANNOT BE HELD LIABLE FOR THE UNETHICAL OR ILLEGAL USE OF THE SAME**
 - This **Python Script CANNOT book slots automatically**. It doesn't skip any of the steps that a User would have to take on the official portal. You will still have to enter the OTP and Captcha as you do in the CoWIN Portal.
 - **Do NOT** use unless all the beneficiaries selected are supposed to get the same Vaccine and Dose.
 - There is **no option** to Register a new Phone/Mobile or add beneficiaries for now. This can be used only after beneficiary has been added through the official Portal/App.
 - Be careful if you're choosing to use the auto-book feature. It will blindly select first available Vaccination **Centre, Date (Both Sorted Ascending) and a RANDOM slot**. I would not recommend using this feature unless and until it's crucial.
 - If you accidentally booked a slot you didn't want to then don’t worry. You can always log in to the CoWIN Portal and cancel/re-schedule that.
 - This goes without saying but, once you get your shot, please do help out any people around you who may not have a laptop or the know-how. For instance any sort of domestic help or literally the thousands of people who don't have the knowledge or luxury as we do.
+- The Developer reserves their rights to take any legal action as enumerated under the law against any unethical or illegal use of the same.
 - **API Details (Do read the first paragraph): https://apisetu.gov.in/public/marketplace/api/cowin/cowin-public-v2**
 
 <p align='center'><b>Made with ❤ by Dhruv Panchal</b></p>
